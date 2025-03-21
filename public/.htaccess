@@ -74,9 +74,4 @@ RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
 </IfModule>
 
 # Limite la taille des requêtes
-LimitRequestBody 10485760
-
-# Protection contre les attaques par force brute
-LimitRequestFields 50
-LimitRequestFieldSize 8190
-LimitRequestLine 8190 
+LimitRequestBody 10485760 
