@@ -386,62 +386,78 @@ class MotoController {
             $moto = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$moto) {
-                $_SESSION['error'] = "Moto non trouvée";
+                $_SESSION['flash_message'] = "Moto non trouvée";
+                $_SESSION['flash_type'] = "danger";
                 header('Location: index.php?route=motos');
                 exit;
             }
 
-            // Récupération des suspensions
-            $sql = "SELECT * FROM suspensions WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $suspensions = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupération des freins
-            $sql = "SELECT * FROM freins WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $freins = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupération de la transmission
-            $sql = "SELECT * FROM transmissions WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $transmission = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupération de l'échappement
-            $sql = "SELECT * FROM echappements WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $echappement = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupération de l'électronique
-            $sql = "SELECT * FROM electroniques WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $electronique = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Récupération des pneumatiques
-            $sql = "SELECT * FROM pneumatiques WHERE moto_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $pneumatiques = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Préparation des capteurs pour l'affichage
-            $capteurs = [
-                'vitesse' => $electronique['capteur_vitesse'] ?? false,
-                'regime' => $electronique['capteur_regime'] ?? false,
-                'temperature_pneus' => $electronique['capteur_temperature_pneus'] ?? false,
-                'gps' => $electronique['capteur_gps'] ?? false,
-                'suspension' => $electronique['capteur_suspension'] ?? false,
-                'pression_pneus' => $electronique['capteur_pression_pneus'] ?? false
+            // Initialize all arrays with default values
+            $data = [
+                'moto' => $moto,
+                'suspensions' => [],
+                'freins' => [],
+                'transmission' => [],
+                'echappement' => [],
+                'electronique' => [],
+                'pneumatiques' => [],
+                'capteurs' => [
+                    'vitesse' => false,
+                    'regime' => false,
+                    'temperature_pneus' => false,
+                    'gps' => false,
+                    'suspension' => false,
+                    'pression_pneus' => false
+                ]
             ];
+
+            // Récupération des données avec gestion des erreurs
+            $tables = [
+                'suspensions' => 'suspensions',
+                'freins' => 'freins',
+                'transmission' => 'transmissions',
+                'echappement' => 'echappements',
+                'electronique' => 'electroniques',
+                'pneumatiques' => 'pneumatiques'
+            ];
+
+            foreach ($tables as $key => $table) {
+                try {
+                    $sql = "SELECT * FROM {$table} WHERE moto_id = :id";
+                    $stmt = $this->db->prepare($sql);
+                    $stmt->execute(['id' => $id]);
+                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($result) {
+                        $data[$key] = $result;
+                        
+                        // Update capteurs if electronique data is found
+                        if ($key === 'electronique' && $result) {
+                            $data['capteurs'] = [
+                                'vitesse' => $result['capteur_vitesse'] ?? false,
+                                'regime' => $result['capteur_regime'] ?? false,
+                                'temperature_pneus' => $result['capteur_temperature_pneus'] ?? false,
+                                'gps' => $result['capteur_gps'] ?? false,
+                                'suspension' => $result['capteur_suspension'] ?? false,
+                                'pression_pneus' => $result['capteur_pression_pneus'] ?? false
+                            ];
+                        }
+                    }
+                } catch (PDOException $e) {
+                    error_log("Erreur lors de la récupération des données de {$table}: " . $e->getMessage());
+                    // Continue with next table if one fails
+                    continue;
+                }
+            }
+
+            // Extract all variables for the view
+            extract($data);
 
             // Chargement de la vue avec toutes les données
             require_once APP_PATH . 'views/moto/detail.php';
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $_SESSION['error'] = "Une erreur est survenue lors de la récupération des détails de la moto";
+            $_SESSION['flash_message'] = "Une erreur est survenue lors de la récupération des détails de la moto";
+            $_SESSION['flash_type'] = "danger";
             header('Location: index.php?route=motos');
             exit;
         }
