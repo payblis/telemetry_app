@@ -19,12 +19,23 @@ class MotoController {
         try {
             error_log("Executing motos query");
             $stmt = $this->db->query("
-                SELECT m.*, COUNT(s.id) as total_sessions,
-                       GROUP_CONCAT(DISTINCT CONCAT(e.marque, ' ', e.modele) SEPARATOR ', ') as equipements
+                SELECT m.*, 
+                       COUNT(s.id) as total_sessions,
+                       CONCAT(
+                           COALESCE(e.marque, ''), ' ',
+                           COALESCE(e.modele, ''),
+                           ' / ',
+                           COALESCE(f.etrier_avant_marque, ''), ' ',
+                           COALESCE(f.etrier_avant_modele, ''),
+                           ' / ',
+                           COALESCE(t.chaine_marque, ''), ' ',
+                           COALESCE(t.chaine_type, '')
+                       ) as equipements_principaux
                 FROM motos m 
                 LEFT JOIN sessions s ON m.id = s.moto_id
-                LEFT JOIN moto_equipement me ON m.id = me.moto_id
-                LEFT JOIN equipements e ON me.equipement_id = e.id
+                LEFT JOIN echappements e ON m.id = e.moto_id
+                LEFT JOIN freins f ON m.id = f.moto_id
+                LEFT JOIN transmissions t ON m.id = t.moto_id
                 GROUP BY m.id 
                 ORDER BY m.marque, m.modele
             ");
