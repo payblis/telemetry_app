@@ -43,18 +43,12 @@ switch ($route) {
         $controller->index();
         break;
     
-    case 'pilote/new':
-        require_once APP_PATH . 'controllers/PiloteController.php';
-        $controller = new PiloteController();
-        $controller->create();
+    case 'motos':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        $controller->index();
         break;
-    
-    case 'pilote/edit':
-        require_once APP_PATH . 'controllers/PiloteController.php';
-        $controller = new PiloteController();
-        $controller->edit();
-        break;
-    
+
     case 'moto/new':
         require_once APP_PATH . 'controllers/MotoController.php';
         $controller = new MotoController();
@@ -64,6 +58,47 @@ switch ($route) {
     case 'moto/edit':
         require_once APP_PATH . 'controllers/MotoController.php';
         $controller = new MotoController();
+        if (isset($_GET['id'])) {
+            $controller->edit($_GET['id']);
+        } else {
+            header('Location: index.php?route=motos');
+        }
+        break;
+
+    case 'moto/view':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        if (isset($_GET['id'])) {
+            $controller->view($_GET['id']);
+        } else {
+            header('Location: index.php?route=motos');
+        }
+        break;
+
+    case 'moto/delete':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        if (isset($_GET['id'])) {
+            $controller->delete($_GET['id']);
+        }
+        header('Location: index.php?route=motos');
+        break;
+
+    case 'moto/specs':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        $controller->specs();
+        break;
+    
+    case 'pilote/new':
+        require_once APP_PATH . 'controllers/PiloteController.php';
+        $controller = new PiloteController();
+        $controller->create();
+        break;
+    
+    case 'pilote/edit':
+        require_once APP_PATH . 'controllers/PiloteController.php';
+        $controller = new PiloteController();
         $controller->edit();
         break;
     

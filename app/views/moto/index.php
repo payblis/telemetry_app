@@ -1,4 +1,4 @@
-<?php require_once 'app/views/templates/header.php'; ?>
+<?php require_once APP_PATH . 'views/templates/header.php'; ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -42,38 +42,29 @@
                                     <td><?php echo htmlspecialchars($moto['annee']); ?></td>
                                     <td><?php echo htmlspecialchars($moto['cylindree']); ?> cc</td>
                                     <td>
-                                        <?php 
-                                        if (!empty($moto['equipements'])) {
-                                            $equipements = explode(', ', $moto['equipements']);
-                                            foreach ($equipements as $equipement) {
-                                                echo '<span class="badge badge-info">' . htmlspecialchars($equipement) . '</span> ';
-                                            }
-                                        } else {
-                                            echo '<span class="text-muted">Aucun équipement</span>';
-                                        }
-                                        ?>
+                                        <?php if (!empty($moto['equipements'])): ?>
+                                            <?php echo htmlspecialchars($moto['equipements']); ?>
+                                        <?php else: ?>
+                                            <span class="text-muted">Aucun équipement</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td><?php echo htmlspecialchars($moto['total_sessions']); ?></td>
-                                    <td class="last">
-                                        <a href="index.php?route=moto/view&id=<?php echo $moto['id']; ?>" 
-                                           class="btn btn-info btn-sm" 
-                                           data-toggle="tooltip" 
-                                           title="Voir le profil">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        <a href="index.php?route=moto/edit&id=<?php echo $moto['id']; ?>" 
-                                           class="btn btn-warning btn-sm"
-                                           data-toggle="tooltip" 
-                                           title="Modifier">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a href="index.php?route=moto/delete&id=<?php echo $moto['id']; ?>" 
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette moto ?');"
-                                           data-toggle="tooltip" 
-                                           title="Supprimer">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="index.php?route=moto/view&id=<?php echo $moto['id']; ?>" 
+                                               class="btn btn-info btn-sm">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="index.php?route=moto/edit&id=<?php echo $moto['id']; ?>" 
+                                               class="btn btn-warning btn-sm">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="index.php?route=moto/delete&id=<?php echo $moto['id']; ?>" 
+                                               class="btn btn-danger btn-sm"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette moto ?');">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -86,4 +77,4 @@
     </div>
 </div>
 
-<?php require_once 'app/views/templates/footer.php'; ?> 
+<?php require_once APP_PATH . 'views/templates/footer.php'; ?> 

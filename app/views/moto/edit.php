@@ -1,4 +1,4 @@
-<?php require_once 'app/views/templates/header.php'; ?>
+<?php require_once APP_PATH . 'views/templates/header.php'; ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -38,7 +38,7 @@
                         <label class="control-label col-md-3 col-sm-3">Cylindrée (cc) <span class="required">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             <input type="number" name="cylindree" required="required" class="form-control" 
-                                   min="125" max="2000" step="1"
+                                   min="0" step="1"
                                    value="<?php echo htmlspecialchars($moto['cylindree']); ?>">
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                         <label class="control-label col-md-3 col-sm-3">Poids (kg) <span class="required">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             <input type="number" name="poids" required="required" class="form-control" 
-                                   min="100" max="400" step="0.1"
+                                   min="0" step="0.1"
                                    value="<?php echo htmlspecialchars($moto['poids']); ?>">
                         </div>
                     </div>
@@ -56,11 +56,12 @@
                         <label class="control-label col-md-3 col-sm-3">Puissance (ch) <span class="required">*</span></label>
                         <div class="col-md-9 col-sm-9">
                             <input type="number" name="puissance" required="required" class="form-control" 
-                                   min="15" max="300" step="1"
+                                   min="0" step="0.1"
                                    value="<?php echo htmlspecialchars($moto['puissance']); ?>">
                         </div>
                     </div>
 
+                    <?php if (isset($equipements) && !empty($equipements)): ?>
                     <div class="form-group row">
                         <label class="control-label col-md-3 col-sm-3">Équipements</label>
                         <div class="col-md-9 col-sm-9">
@@ -81,6 +82,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <div class="ln_solid"></div>
 
@@ -112,4 +114,4 @@
 }
 </style>
 
-<?php require_once 'app/views/templates/footer.php'; ?> 
+<?php require_once APP_PATH . 'views/templates/footer.php'; ?> 

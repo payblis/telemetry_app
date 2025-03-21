@@ -2,11 +2,9 @@
 
 class MotoController {
     private $db;
-    private $apiKeys;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
-        $this->apiKeys = require APP_PATH . 'config/api_keys.php';
     }
 
     public function index() {
@@ -29,7 +27,7 @@ class MotoController {
             $motos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             $pageTitle = "Liste des motos";
-            require_once 'app/views/moto/index.php';
+            require_once APP_PATH . 'views/moto/index.php';
         } catch (PDOException $e) {
             $_SESSION['flash_message'] = "Erreur lors de la récupération des motos.";
             $_SESSION['flash_type'] = "danger";
@@ -98,7 +96,7 @@ class MotoController {
         }
 
         $pageTitle = "Ajouter une moto";
-        require_once 'app/views/moto/create.php';
+        require_once APP_PATH . 'views/moto/create.php';
     }
 
     public function edit($id) {
@@ -172,7 +170,7 @@ class MotoController {
             $moto['equipement_ids'] = $moto['equipement_ids'] ? explode(',', $moto['equipement_ids']) : [];
 
             $pageTitle = "Modifier la moto";
-            require_once 'app/views/moto/edit.php';
+            require_once APP_PATH . 'views/moto/edit.php';
         } catch (Exception $e) {
             $_SESSION['flash_message'] = "Erreur lors de la modification de la moto.";
             $_SESSION['flash_type'] = "danger";
@@ -253,7 +251,7 @@ class MotoController {
             $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $pageTitle = "Profil de la moto";
-            require_once 'app/views/moto/view.php';
+            require_once APP_PATH . 'views/moto/view.php';
         } catch (Exception $e) {
             $_SESSION['flash_message'] = "Erreur lors de la récupération des informations de la moto.";
             $_SESSION['flash_type'] = "danger";
@@ -261,7 +259,6 @@ class MotoController {
             exit;
         }
     }
-<<<<<<< HEAD
 
     public function specs() {
         if (!isset($_SESSION['user_id'])) {
@@ -280,7 +277,7 @@ class MotoController {
             exit;
         }
 
-        require_once 'app/helpers/ChatGPTHelper.php';
+        require_once APP_PATH . 'helpers/ChatGPTHelper.php';
         $chatGPT = new ChatGPTHelper('votre_cle_api_ici');
 
         $specs = $chatGPT->getMotoSpecs($data['marque'], $data['modele'], $data['annee']);
@@ -299,6 +296,4 @@ class MotoController {
         ]);
         exit;
     }
-=======
->>>>>>> parent of f386885 (fix)
 } 

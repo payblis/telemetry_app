@@ -1,4 +1,4 @@
-<?php require_once 'app/views/templates/header.php'; ?>
+<?php require_once APP_PATH . 'views/templates/header.php'; ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -54,21 +54,18 @@
                         <!-- Équipements -->
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Équipements installés</h2>
+                                <h2>Équipements</h2>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                                <?php if (empty($moto['equipements'])): ?>
-                                    <p>Aucun équipement installé sur cette moto.</p>
-                                <?php else: ?>
+                                <?php if (!empty($moto['equipements'])): ?>
                                     <div class="equipements-list">
-                                        <?php 
-                                        $equipements = explode(', ', $moto['equipements']);
-                                        foreach ($equipements as $equipement): 
-                                        ?>
+                                        <?php foreach (explode(', ', $moto['equipements']) as $equipement): ?>
                                             <span class="badge badge-info"><?php echo htmlspecialchars($equipement); ?></span>
                                         <?php endforeach; ?>
                                     </div>
+                                <?php else: ?>
+                                    <p class="text-muted">Aucun équipement installé sur cette moto.</p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -80,43 +77,38 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                                <?php if (empty($sessions)): ?>
-                                    <p>Aucune session enregistrée pour cette moto.</p>
-                                <?php else: ?>
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Pilote</th>
-                                                <th>Circuit</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($sessions as $session): ?>
+                                <?php if (!empty($sessions)): ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped jambo_table">
+                                            <thead>
                                                 <tr>
-                                                    <td>
-                                                        <?php 
-                                                        $date = new DateTime($session['date_session']);
-                                                        echo $date->format('d/m/Y H:i');
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo htmlspecialchars($session['pilote_prenom'] . ' ' . $session['pilote_nom']); ?>
-                                                    </td>
+                                                    <th>Date</th>
+                                                    <th>Pilote</th>
+                                                    <th>Circuit</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($sessions as $session): ?>
+                                                <tr>
+                                                    <td><?php echo date('d/m/Y', strtotime($session['date_session'])); ?></td>
+                                                    <td><?php echo htmlspecialchars($session['pilote_prenom'] . ' ' . $session['pilote_nom']); ?></td>
                                                     <td><?php echo htmlspecialchars($session['circuit_nom']); ?></td>
                                                     <td>
                                                         <a href="index.php?route=session/view&id=<?php echo $session['id']; ?>" 
-                                                           class="btn btn-primary btn-sm">
+                                                           class="btn btn-info btn-sm">
                                                             <i class="fa fa-eye"></i> Voir
                                                         </a>
                                                     </td>
                                                 </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php else: ?>
+                                    <p class="text-muted">Aucune session enregistrée pour cette moto.</p>
                                 <?php endif; ?>
-                                
+
                                 <div class="text-center mt-3">
                                     <a href="index.php?route=session/new&moto_id=<?php echo $moto['id']; ?>" 
                                        class="btn btn-success">
@@ -143,4 +135,4 @@
 }
 </style>
 
-<?php require_once 'app/views/templates/footer.php'; ?> 
+<?php require_once APP_PATH . 'views/templates/footer.php'; ?> 
