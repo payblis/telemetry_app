@@ -65,9 +65,12 @@ class MotoController {
             try {
                 $this->db->beginTransaction();
 
+                // 1. Insertion des informations générales de la moto
                 $stmt = $this->db->prepare("
-                    INSERT INTO motos (marque, modele, annee, cylindree, poids, puissance) 
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO motos (
+                        marque, modele, annee, cylindree, type_moto, puissance_moteur,
+                        couple_moteur, poids_sec, poids_ordre_marche
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 
                 $stmt->execute([
@@ -75,23 +78,159 @@ class MotoController {
                     $_POST['modele'],
                     $_POST['annee'],
                     $_POST['cylindree'],
-                    $_POST['poids'],
-                    $_POST['puissance']
+                    $_POST['type_moto'],
+                    $_POST['puissance_moteur'],
+                    $_POST['couple_moteur'] ?: null,
+                    $_POST['poids_sec'] ?: null,
+                    $_POST['poids_ordre_marche'] ?: null
                 ]);
 
                 $motoId = $this->db->lastInsertId();
 
-                // Gestion des équipements
-                if (isset($_POST['equipements']) && is_array($_POST['equipements'])) {
-                    $stmt = $this->db->prepare("
-                        INSERT INTO moto_equipement (moto_id, equipement_id) 
-                        VALUES (?, ?)
-                    ");
-                    
-                    foreach ($_POST['equipements'] as $equipementId) {
-                        $stmt->execute([$motoId, $equipementId]);
-                    }
-                }
+                // 2. Insertion des suspensions
+                $stmt = $this->db->prepare("
+                    INSERT INTO suspensions (
+                        moto_id, fourche_marque, fourche_modele, fourche_precharge,
+                        fourche_compression, fourche_detente, amortisseur_marque,
+                        amortisseur_modele, amortisseur_precharge, amortisseur_compression_bv,
+                        amortisseur_compression_hv, amortisseur_detente, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['fourche_marque'],
+                    $_POST['fourche_modele'] ?: null,
+                    $_POST['fourche_precharge'] ?: null,
+                    $_POST['fourche_compression'] ?: null,
+                    $_POST['fourche_detente'] ?: null,
+                    $_POST['amortisseur_marque'],
+                    $_POST['amortisseur_modele'] ?: null,
+                    $_POST['amortisseur_precharge'] ?: null,
+                    $_POST['amortisseur_compression_bv'] ?: null,
+                    $_POST['amortisseur_compression_hv'] ?: null,
+                    $_POST['amortisseur_detente'] ?: null,
+                    $_POST['suspensions_notes'] ?: null
+                ]);
+
+                // 3. Insertion des freins
+                $stmt = $this->db->prepare("
+                    INSERT INTO freins (
+                        moto_id, etrier_avant_marque, etrier_avant_modele,
+                        etrier_arriere_marque, etrier_arriere_modele,
+                        maitre_cylindre_avant_marque, maitre_cylindre_avant_modele,
+                        maitre_cylindre_arriere_marque, maitre_cylindre_arriere_modele,
+                        plaquettes_type, disques_type, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['etrier_avant_marque'],
+                    $_POST['etrier_avant_modele'] ?: null,
+                    $_POST['etrier_arriere_marque'] ?: null,
+                    $_POST['etrier_arriere_modele'] ?: null,
+                    $_POST['maitre_cylindre_avant_marque'] ?: null,
+                    $_POST['maitre_cylindre_avant_modele'] ?: null,
+                    $_POST['maitre_cylindre_arriere_marque'] ?: null,
+                    $_POST['maitre_cylindre_arriere_modele'] ?: null,
+                    $_POST['plaquettes_type'] ?: null,
+                    $_POST['disques_type'] ?: null,
+                    $_POST['freins_notes'] ?: null
+                ]);
+
+                // 4. Insertion de la transmission
+                $stmt = $this->db->prepare("
+                    INSERT INTO transmissions (
+                        moto_id, chaine_marque, chaine_modele, chaine_type,
+                        couronne_dents, pignon_dents, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['chaine_marque'] ?: null,
+                    $_POST['chaine_modele'] ?: null,
+                    $_POST['chaine_type'] ?: null,
+                    $_POST['couronne_dents'],
+                    $_POST['pignon_dents'],
+                    $_POST['transmission_notes'] ?: null
+                ]);
+
+                // 5. Insertion de l'échappement
+                $stmt = $this->db->prepare("
+                    INSERT INTO echappements (
+                        moto_id, marque, modele, type, notes
+                    ) VALUES (?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['echappement_marque'],
+                    $_POST['echappement_modele'] ?: null,
+                    $_POST['echappement_type'] ?: null,
+                    $_POST['echappement_notes'] ?: null
+                ]);
+
+                // 6. Insertion de l'électronique
+                $stmt = $this->db->prepare("
+                    INSERT INTO electroniques (
+                        moto_id, ecu_marque, ecu_modele, capteur_vitesse,
+                        capteur_regime, capteur_temperature_pneus, capteur_gps,
+                        capteur_suspension, capteur_pression_pneus,
+                        autres_capteurs, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['ecu_marque'],
+                    $_POST['ecu_modele'] ?: null,
+                    isset($_POST['capteur_vitesse']),
+                    isset($_POST['capteur_regime']),
+                    isset($_POST['capteur_temperature_pneus']),
+                    isset($_POST['capteur_gps']),
+                    isset($_POST['capteur_suspension']),
+                    isset($_POST['capteur_pression_pneus']),
+                    $_POST['autres_capteurs'] ?: null,
+                    $_POST['electronique_notes'] ?: null
+                ]);
+
+                // 7. Insertion des pneumatiques
+                $stmt = $this->db->prepare("
+                    INSERT INTO pneumatiques (
+                        moto_id, marque, modele, type_gomme,
+                        pression_avant_froid, pression_arriere_froid, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['pneu_marque'],
+                    $_POST['pneu_modele'] ?: null,
+                    $_POST['type_gomme'] ?: null,
+                    $_POST['pression_avant_froid'] ?: null,
+                    $_POST['pression_arriere_froid'] ?: null,
+                    $_POST['pneumatiques_notes'] ?: null
+                ]);
+
+                // 8. Insertion des accessoires
+                $stmt = $this->db->prepare("
+                    INSERT INTO accessoires (
+                        moto_id, type_guidon, commandes_reculees_marque,
+                        commandes_reculees_reglages, type_selle, type_carenage, notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                ");
+
+                $stmt->execute([
+                    $motoId,
+                    $_POST['type_guidon'] ?: null,
+                    $_POST['commandes_reculees_marque'] ?: null,
+                    $_POST['commandes_reculees_reglages'] ?: null,
+                    $_POST['type_selle'] ?: null,
+                    $_POST['type_carenage'] ?: null,
+                    $_POST['accessoires_notes'] ?: null
+                ]);
 
                 $this->db->commit();
 
@@ -101,17 +240,10 @@ class MotoController {
                 exit;
             } catch (PDOException $e) {
                 $this->db->rollBack();
+                error_log("Erreur SQL dans MotoController::create(): " . $e->getMessage());
                 $_SESSION['flash_message'] = "Erreur lors de l'ajout de la moto.";
                 $_SESSION['flash_type'] = "danger";
             }
-        }
-
-        // Récupération de la liste des équipements pour le formulaire
-        try {
-            $stmt = $this->db->query("SELECT * FROM equipements ORDER BY nom");
-            $equipements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $equipements = [];
         }
 
         $pageTitle = "Ajouter une moto";
