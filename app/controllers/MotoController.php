@@ -20,7 +20,7 @@ class MotoController {
             error_log("Executing motos query");
             $stmt = $this->db->query("
                 SELECT m.*, COUNT(s.id) as total_sessions,
-                       GROUP_CONCAT(DISTINCT e.nom SEPARATOR ', ') as equipements
+                       GROUP_CONCAT(DISTINCT CONCAT(e.marque, ' ', e.modele) SEPARATOR ', ') as equipements
                 FROM motos m 
                 LEFT JOIN sessions s ON m.id = s.moto_id
                 LEFT JOIN moto_equipement me ON m.id = me.moto_id
