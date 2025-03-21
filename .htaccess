@@ -7,19 +7,19 @@ Options -Indexes
     # Forcer HTTPS
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-    # Protection du fichier de configuration
-    <Files "config.php">
-        Order Allow,Deny
-        Deny from all
-    </Files>
-    
-    # Protection du composer.json et composer.lock
-    <FilesMatch "^(composer\.(json|lock))$">
-        Order Allow,Deny
-        Deny from all
-    </Files>
 </IfModule>
+
+# Protection du fichier de configuration
+<FilesMatch "config\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protection du composer.json et composer.lock
+<FilesMatch "composer\.(json|lock)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
 
 # PHP configuration
 php_value session.cookie_httponly 1
