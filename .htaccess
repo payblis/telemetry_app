@@ -1,0 +1,38 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Forcer HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Protection du fichier de configuration
+    <Files "config.php">
+        Order Allow,Deny
+        Deny from all
+    </Files>
+    
+    # Protection du composer.json et composer.lock
+    <FilesMatch "^(composer\.(json|lock))$">
+        Order Allow,Deny
+        Deny from all
+    </Files>
+</IfModule>
+
+# PHP configuration
+php_value session.cookie_httponly 1
+php_value session.cookie_secure 1
+php_value session.use_only_cookies 1
+php_value session.gc_maxlifetime 3600
+php_value max_execution_time 30
+php_value memory_limit 128M
+php_value post_max_size 8M
+php_value upload_max_filesize 2M
+
+# Headers de sécurité
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" 
