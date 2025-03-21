@@ -1,33 +1,47 @@
 /* Variables globales */
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    --accent-color: #e74c3c;
-    --text-color: #2c3e50;
-    --light-bg: #f8f9fa;
+    --primary-color: #e63946;     /* Rouge racing */
+    --secondary-color: #1d3557;   /* Bleu foncé */
+    --accent-color: #f1faee;      /* Blanc cassé */
+    --dark-color: #2b2d42;        /* Gris foncé */
+    --light-color: #f8f9fa;       /* Gris clair */
 }
 
 /* Styles généraux */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
     color: var(--text-color);
     line-height: 1.6;
 }
 
 /* Navigation */
 .navbar {
+    background-color: var(--secondary-color) !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navbar-brand {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.5rem;
+    color: var(--accent-color) !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--accent-color) !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
 }
 
 /* Cards */
 .card {
     border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
 }
 
@@ -35,20 +49,38 @@ body {
     transform: translateY(-5px);
 }
 
-.card-title {
-    color: var(--primary-color);
+.card-header {
+    background-color: var(--secondary-color);
+    color: var(--accent-color);
+    border-radius: 10px 10px 0 0 !important;
     font-weight: 600;
 }
 
 /* Boutons */
 .btn-primary {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: darken(var(--secondary-color), 10%);
-    border-color: darken(var(--secondary-color), 10%);
+    background-color: #d62828;
+    border-color: #d62828;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 /* Footer */
@@ -59,7 +91,8 @@ footer {
 /* Tableaux de données */
 .table {
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .table thead th {
