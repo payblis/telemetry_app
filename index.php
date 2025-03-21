@@ -1,99 +1,190 @@
 <?php
+require_once 'config.php';
+require_once 'database.php';
 session_start();
-require_once 'config/database.php';
-
-// Vérification de l'authentification
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
-}
-
-// Récupération des informations de l'utilisateur
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch();
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télémétrie Moto - Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Telemetry App - Assistant Moto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        .session-panel {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chat-panel {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .circuit-select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .user-message {
+            background: #e3f2fd;
+            margin-left: 20%;
+        }
+        .ai-message {
+            background: #f5f5f5;
+            margin-right: 20%;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
+    <div class="header">
+        <h1>Telemetry App - Assistant Moto</h1>
+    </div>
+    
     <div class="container">
-        <header>
-            <nav>
-                <div class="logo">TéléMoto AI</div>
-                <ul>
-                    <li><a href="sessions.php">Sessions</a></li>
-                    <li><a href="pilotes.php">Pilotes</a></li>
-                    <li><a href="motos.php">Motos</a></li>
-                    <li><a href="circuits.php">Circuits</a></li>
-                    <?php if ($user['role'] === 'admin'): ?>
-                    <li><a href="admin/dashboard.php">Administration</a></li>
-                    <?php endif; ?>
-                    <li><a href="logout.php">Déconnexion</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <main>
-            <h1>Bienvenue, <?php echo htmlspecialchars($user['username']); ?></h1>
+        <div class="main-content">
+            <div class="session-panel">
+                <h2>Nouvelle Session</h2>
+                <button class="btn" onclick="createNewSession()">Créer une session</button>
+                <select class="circuit-select" id="circuitSelect">
+                    <option value="">Sélectionnez un circuit</option>
+                    <option value="lemans">Circuit du Mans</option>
+                    <option value="nogaro">Circuit de Nogaro</option>
+                    <option value="barcelone">Circuit de Barcelone</option>
+                </select>
+                <div id="circuitInfo"></div>
+            </div>
             
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h2>Nouvelle Session</h2>
-                    <a href="sessions/nouvelle.php" class="button">Créer une session</a>
-                </div>
-
-                <div class="card">
-                    <h2>Sessions Récentes</h2>
-                    <?php
-                    $stmt = $pdo->query("SELECT s.*, c.nom as circuit_nom, p.nom as pilote_nom 
-                                       FROM sessions s 
-                                       JOIN circuits c ON s.circuit_id = c.id 
-                                       JOIN pilotes p ON s.pilote_id = p.id 
-                                       ORDER BY s.created_at DESC LIMIT 5");
-                    $sessions = $stmt->fetchAll();
-                    ?>
-                    <ul class="sessions-list">
-                        <?php foreach ($sessions as $session): ?>
-                        <li>
-                            <a href="sessions/details.php?id=<?php echo $session['id']; ?>">
-                                <?php echo htmlspecialchars($session['circuit_nom']); ?> - 
-                                <?php echo htmlspecialchars($session['pilote_nom']); ?> - 
-                                <?php echo date('d/m/Y H:i', strtotime($session['date_session'])); ?>
-                            </a>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <h2>Statistiques</h2>
-                    <?php
-                    $stats = $pdo->query("SELECT 
-                        (SELECT COUNT(*) FROM sessions) as total_sessions,
-                        (SELECT COUNT(*) FROM pilotes) as total_pilotes,
-                        (SELECT COUNT(*) FROM motos) as total_motos")->fetch();
-                    ?>
-                    <ul class="stats-list">
-                        <li>Sessions totales : <?php echo $stats['total_sessions']; ?></li>
-                        <li>Pilotes : <?php echo $stats['total_pilotes']; ?></li>
-                        <li>Motos : <?php echo $stats['total_motos']; ?></li>
-                    </ul>
+            <div class="chat-panel">
+                <h2>Conversation avec l'Assistant</h2>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Posez votre question...">
+                    <button class="btn" onclick="sendMessage()">Envoyer</button>
                 </div>
             </div>
-        </main>
-
-        <footer>
-            <p>&copy; <?php echo date('Y'); ?> TéléMoto AI - Tous droits réservés</p>
-        </footer>
+        </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script>
+        const SITE_URL = '<?php echo SITE_URL; ?>';
+        
+        function createNewSession() {
+            const circuit = document.getElementById('circuitSelect').value;
+            if (!circuit) {
+                alert('Veuillez sélectionner un circuit');
+                return;
+            }
+            // Appel AJAX pour créer une nouvelle session
+            fetch(SITE_URL + '/api/create_session.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ circuit: circuit })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('circuitInfo').innerHTML = data.circuitInfo;
+            });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            if (!message) return;
+
+            // Afficher le message de l'utilisateur
+            appendMessage(message, true);
+            messageInput.value = '';
+
+            // Appel AJAX pour envoyer le message à l'API
+            fetch(SITE_URL + '/api/chat.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response, false);
+            });
+        }
+
+        function appendMessage(message, isUser) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
 </body>
 </html> 
