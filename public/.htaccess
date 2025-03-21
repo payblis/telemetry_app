@@ -76,8 +76,4 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
 # Limite la taille des requêtes
-LimitRequestBody 10485760
-
-# PHP error handling
-php_flag display_errors on
-php_value error_reporting E_ALL 
+LimitRequestBody 10485760 
