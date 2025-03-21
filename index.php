@@ -1,4 +1,11 @@
 <?php
+// Définir un répertoire de session personnalisé
+$custom_session_path = __DIR__ . '/sessions';
+if (!file_exists($custom_session_path)) {
+    mkdir($custom_session_path, 0755, true);
+}
+session_save_path($custom_session_path);
+
 require_once 'config.php';
 require_once 'database.php';
 session_start();

@@ -1,0 +1,6 @@
+/sessions/
+/vendor/
+/logs/
+.env
+composer.phar
+*.log 
