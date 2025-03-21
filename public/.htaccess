@@ -60,6 +60,9 @@ Options -Indexes
     ExpiresByType image/x-icon "access plus 1 year"
 </IfModule>
 
+# Permettre l'accès direct aux fichiers statiques
+RewriteRule ^(vendors|css|js|images)/.*\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ - [L]
+
 # Si le fichier ou dossier n'existe pas physiquement
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
