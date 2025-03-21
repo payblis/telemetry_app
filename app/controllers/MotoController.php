@@ -2,9 +2,11 @@
 
 class MotoController {
     private $db;
+    private $apiKeys;
 
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
+        $this->apiKeys = require APP_PATH . 'config/api_keys.php';
     }
 
     public function index() {
@@ -259,4 +261,44 @@ class MotoController {
             exit;
         }
     }
+<<<<<<< HEAD
+
+    public function specs() {
+        if (!isset($_SESSION['user_id'])) {
+            header('HTTP/1.1 401 Unauthorized');
+            echo json_encode(['success' => false, 'message' => 'Non autorisé']);
+            exit;
+        }
+
+        // Vérifier si c'est une requête POST avec du JSON
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if (!$data || !isset($data['marque']) || !isset($data['modele']) || !isset($data['annee'])) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['success' => false, 'message' => 'Données invalides']);
+            exit;
+        }
+
+        require_once 'app/helpers/ChatGPTHelper.php';
+        $chatGPT = new ChatGPTHelper('votre_cle_api_ici');
+
+        $specs = $chatGPT->getMotoSpecs($data['marque'], $data['modele'], $data['annee']);
+
+        if ($specs === null) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Impossible de récupérer les spécifications'
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'specs' => $specs
+        ]);
+        exit;
+    }
+=======
+>>>>>>> parent of f386885 (fix)
 } 
