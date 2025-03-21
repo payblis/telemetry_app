@@ -1,6 +1,10 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once '../config.php';
 require_once '../database.php';
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 header('Content-Type: application/json');
 
@@ -32,13 +36,22 @@ try {
         'session_id' => $session_id,
         'circuitInfo' => $circuit_info
     ]);
-} catch (Exception $e) {
+} catch (PDOException $e) {
+    error_log("Database error: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode(['error' => 'Erreur de base de données']);
+} catch (GuzzleException $e) {
+    error_log("API error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Erreur de communication avec l\'API']);
+} catch (Exception $e) {
+    error_log("General error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Une erreur est survenue']);
 }
 
 function getCircuitInfo($circuit) {
-    $client = new \GuzzleHttp\Client();
+    $client = new Client();
     
     $response = $client->post('https://api.openai.com/v1/chat/completions', [
         'headers' => [

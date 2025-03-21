@@ -1,6 +1,10 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once '../config.php';
 require_once '../database.php';
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 header('Content-Type: application/json');
 
@@ -29,6 +33,10 @@ try {
     $stmt->execute([$_SESSION['current_session_id']]);
     $session = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    if (!$session) {
+        throw new Exception('Session non trouvée');
+    }
+    
     // Obtenir la réponse de ChatGPT
     $ai_response = getChatGPTResponse($message, $session);
     
@@ -40,13 +48,22 @@ try {
         'success' => true,
         'response' => $ai_response
     ]);
-} catch (Exception $e) {
+} catch (PDOException $e) {
+    error_log("Database error: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode(['error' => 'Erreur de base de données']);
+} catch (GuzzleException $e) {
+    error_log("API error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Erreur de communication avec l\'API']);
+} catch (Exception $e) {
+    error_log("General error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Une erreur est survenue']);
 }
 
 function getChatGPTResponse($message, $session) {
-    $client = new \GuzzleHttp\Client();
+    $client = new Client();
     
     $system_message = "Vous êtes un expert en moto et en réglages techniques pour la piste. ";
     $system_message .= "Vous connaissez parfaitement le circuit " . $session['nom_circuit'] . " ";
