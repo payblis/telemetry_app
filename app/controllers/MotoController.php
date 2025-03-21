@@ -380,43 +380,68 @@ class MotoController {
 
         try {
             // Récupération des informations de la moto
-            $stmt = $this->db->prepare("
-                SELECT m.*, 
-                       COUNT(DISTINCT s.id) as total_sessions,
-                       COUNT(DISTINCT s.pilote_id) as total_pilotes,
-                       GROUP_CONCAT(DISTINCT e.nom ORDER BY e.nom SEPARATOR ', ') as equipements
-                FROM motos m
-                LEFT JOIN sessions s ON m.id = s.moto_id
-                LEFT JOIN moto_equipement me ON m.id = me.moto_id
-                LEFT JOIN equipements e ON me.equipement_id = e.id
-                WHERE m.id = ?
-                GROUP BY m.id
-            ");
-            $stmt->execute([$id]);
+            $sql = "SELECT * FROM motos WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
             $moto = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$moto) {
-                throw new Exception("Moto non trouvée");
+                $_SESSION['error'] = "Moto non trouvée";
+                header('Location: index.php?route=motos');
+                exit;
             }
 
-            // Récupération des dernières sessions
-            $stmt = $this->db->prepare("
-                SELECT s.*, p.nom as pilote_nom, p.prenom as pilote_prenom, c.nom as circuit_nom
-                FROM sessions s
-                JOIN pilotes p ON s.pilote_id = p.id
-                JOIN circuits c ON s.circuit_id = c.id
-                WHERE s.moto_id = ?
-                ORDER BY s.date_session DESC
-                LIMIT 5
-            ");
-            $stmt->execute([$id]);
-            $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Récupération des suspensions
+            $sql = "SELECT * FROM suspensions WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $suspensions = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $pageTitle = "Profil de la moto";
-            require_once APP_PATH . 'views/moto/view.php';
-        } catch (Exception $e) {
-            $_SESSION['flash_message'] = "Erreur lors de la récupération des informations de la moto.";
-            $_SESSION['flash_type'] = "danger";
+            // Récupération des freins
+            $sql = "SELECT * FROM freins WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $freins = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Récupération de la transmission
+            $sql = "SELECT * FROM transmissions WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $transmission = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Récupération de l'échappement
+            $sql = "SELECT * FROM echappements WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $echappement = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Récupération de l'électronique
+            $sql = "SELECT * FROM electroniques WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $electronique = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Récupération des pneumatiques
+            $sql = "SELECT * FROM pneumatiques WHERE moto_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            $pneumatiques = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Préparation des capteurs pour l'affichage
+            $capteurs = [
+                'vitesse' => $electronique['capteur_vitesse'] ?? false,
+                'regime' => $electronique['capteur_regime'] ?? false,
+                'temperature_pneus' => $electronique['capteur_temperature_pneus'] ?? false,
+                'gps' => $electronique['capteur_gps'] ?? false,
+                'suspension' => $electronique['capteur_suspension'] ?? false,
+                'pression_pneus' => $electronique['capteur_pression_pneus'] ?? false
+            ];
+
+            // Chargement de la vue avec toutes les données
+            require_once APP_PATH . 'views/moto/detail.php';
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $_SESSION['error'] = "Une erreur est survenue lors de la récupération des détails de la moto";
             header('Location: index.php?route=motos');
             exit;
         }
