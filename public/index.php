@@ -31,6 +31,66 @@ switch ($route) {
         $controller->login();
         break;
     
+    case 'logout':
+        require_once APP_PATH . 'controllers/AuthController.php';
+        $controller = new AuthController();
+        $controller->logout();
+        break;
+    
+    case 'dashboard':
+        require_once APP_PATH . 'controllers/DashboardController.php';
+        $controller = new DashboardController();
+        $controller->index();
+        break;
+    
+    case 'pilote/new':
+        require_once APP_PATH . 'controllers/PiloteController.php';
+        $controller = new PiloteController();
+        $controller->create();
+        break;
+    
+    case 'pilote/edit':
+        require_once APP_PATH . 'controllers/PiloteController.php';
+        $controller = new PiloteController();
+        $controller->edit();
+        break;
+    
+    case 'moto/new':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        $controller->create();
+        break;
+    
+    case 'moto/edit':
+        require_once APP_PATH . 'controllers/MotoController.php';
+        $controller = new MotoController();
+        $controller->edit();
+        break;
+    
+    case 'session/new':
+        require_once APP_PATH . 'controllers/SessionController.php';
+        $controller = new SessionController();
+        $controller->create();
+        break;
+    
+    case 'session':
+        require_once APP_PATH . 'controllers/SessionController.php';
+        $controller = new SessionController();
+        $controller->view();
+        break;
+    
+    case 'telemetrie':
+        require_once APP_PATH . 'controllers/TelemetrieController.php';
+        $controller = new TelemetrieController();
+        $controller->index();
+        break;
+    
+    case 'reglages':
+        require_once APP_PATH . 'controllers/ReglagesController.php';
+        $controller = new ReglagesController();
+        $controller->index();
+        break;
+    
     default:
         // Page 404
         header("HTTP/1.0 404 Not Found");
