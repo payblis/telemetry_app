@@ -42,11 +42,19 @@ foreach ($folders as $folder => $readable) {
 
 // Test 5 : Configuration Apache
 echo "<h2>5. Configuration Apache</h2>";
-echo "mod_rewrite : " . (in_array('mod_rewrite', apache_get_modules()) ? '✅ OK' : '❌ Non activé') . "<br>";
+$mod_rewrite = false;
+if (function_exists('apache_get_modules')) {
+    $mod_rewrite = in_array('mod_rewrite', apache_get_modules());
+} else {
+    // Alternative check for mod_rewrite
+    $mod_rewrite = isset($_SERVER['REDIRECT_URL']) || isset($_SERVER['HTTP_MOD_REWRITE']);
+}
+echo "mod_rewrite : " . ($mod_rewrite ? '✅ OK' : '⚠️ Statut inconnu') . "<br>";
 
 // Informations supplémentaires
 echo "<h2>6. Informations de connexion</h2>";
 echo "URL de l'application : " . $_SERVER['HTTP_HOST'] . "<br>";
+echo "URL de connexion : https://" . $_SERVER['HTTP_HOST'] . "/public/index.php?route=login<br>";
 echo "Identifiants admin par défaut :<br>";
 echo "- Username : admin<br>";
 echo "- Email : admin@telemetrie-ia.fr<br>";
