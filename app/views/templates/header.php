@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<?php
+// Initialize route from URL parameter or set default
+$route = isset($_GET['route']) ? $_GET['route'] : 'home';
+// Extract the base route for navigation highlighting
+$baseRoute = explode('/', $route)[0];
+?>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -12,10 +18,10 @@
             <nav class="main-nav">
                 <a href="index.php" class="logo">Telemetry App</a>
                 <ul class="nav-links">
-                    <li><a href="index.php?route=motos" class="<?php echo $route === 'motos' ? 'active' : ''; ?>">Motos</a></li>
-                    <li><a href="index.php?route=sessions" class="<?php echo $route === 'sessions' ? 'active' : ''; ?>">Sessions</a></li>
-                    <li><a href="index.php?route=pilotes" class="<?php echo $route === 'pilotes' ? 'active' : ''; ?>">Pilotes</a></li>
-                    <li><a href="index.php?route=circuits" class="<?php echo $route === 'circuits' ? 'active' : ''; ?>">Circuits</a></li>
+                    <li><a href="index.php?route=motos" class="<?php echo $baseRoute === 'motos' || $baseRoute === 'moto' ? 'active' : ''; ?>">Motos</a></li>
+                    <li><a href="index.php?route=sessions" class="<?php echo $baseRoute === 'sessions' || $baseRoute === 'session' ? 'active' : ''; ?>">Sessions</a></li>
+                    <li><a href="index.php?route=pilotes" class="<?php echo $baseRoute === 'pilotes' || $baseRoute === 'pilote' ? 'active' : ''; ?>">Pilotes</a></li>
+                    <li><a href="index.php?route=circuits" class="<?php echo $baseRoute === 'circuits' || $baseRoute === 'circuit' ? 'active' : ''; ?>">Circuits</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="user-menu">
                             <a href="#" class="user-toggle">
