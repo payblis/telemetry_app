@@ -8,12 +8,16 @@ class MotoController {
     }
 
     public function index() {
+        error_log("MotoController::index() called");
+        
         if (!isset($_SESSION['user_id'])) {
+            error_log("User not logged in, redirecting to login");
             header('Location: index.php?route=login');
             exit;
         }
 
         try {
+            error_log("Executing motos query");
             $stmt = $this->db->query("
                 SELECT m.*, COUNT(s.id) as total_sessions,
                        GROUP_CONCAT(DISTINCT e.nom SEPARATOR ', ') as equipements
@@ -25,11 +29,26 @@ class MotoController {
                 ORDER BY m.marque, m.modele
             ");
             $motos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Found " . count($motos) . " motos");
             
             $pageTitle = "Liste des motos";
+            error_log("Loading view file: " . APP_PATH . 'views/moto/index.php');
+            
+            if (!file_exists(APP_PATH . 'views/moto/index.php')) {
+                error_log("View file not found: " . APP_PATH . 'views/moto/index.php');
+                throw new Exception("View file not found");
+            }
+            
             require_once APP_PATH . 'views/moto/index.php';
         } catch (PDOException $e) {
+            error_log("Database error in MotoController::index(): " . $e->getMessage());
             $_SESSION['flash_message'] = "Erreur lors de la récupération des motos.";
+            $_SESSION['flash_type'] = "danger";
+            header('Location: index.php?route=dashboard');
+            exit;
+        } catch (Exception $e) {
+            error_log("General error in MotoController::index(): " . $e->getMessage());
+            $_SESSION['flash_message'] = "Erreur lors de l'affichage des motos.";
             $_SESSION['flash_type'] = "danger";
             header('Location: index.php?route=dashboard');
             exit;

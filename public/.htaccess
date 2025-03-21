@@ -2,11 +2,11 @@
 RewriteEngine On
 
 # Définit le répertoire de base
-RewriteBase /
+RewriteBase /public/
 
 # Redirection vers HTTPS (à décommenter en production)
 # RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_FILENAME} [L,R=301]
 
 # Protection du fichier .htaccess
 <Files .htaccess>
@@ -60,10 +60,12 @@ Options -Indexes
     ExpiresByType image/x-icon "access plus 1 year"
 </IfModule>
 
-# Règles de réécriture pour le routage
+# Si le fichier ou dossier n'existe pas physiquement
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+
+# Rediriger toutes les requêtes vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Protection contre les injections SQL et XSS
 <IfModule mod_rewrite.c>
@@ -74,4 +76,8 @@ RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
 </IfModule>
 
 # Limite la taille des requêtes
-LimitRequestBody 10485760 
+LimitRequestBody 10485760
+
+# PHP error handling
+php_flag display_errors on
+php_value error_reporting E_ALL 
