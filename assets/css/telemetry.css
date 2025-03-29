@@ -1,0 +1,191 @@
+/* Styles spécifiques pour la télémétrie */
+
+/* Header de session */
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.session-info h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.session-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item .label {
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.detail-item .value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 0.3rem;
+}
+
+/* Grille de télémétrie */
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Conteneur de jauge */
+.gauge-container {
+    text-align: center;
+}
+
+.gauge-label {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Jauges circulaires personnalisées */
+.speed-gauge {
+    background: linear-gradient(90deg, #e31e24 0%, #ffd700 50%, #28a745 100%);
+    position: relative;
+}
+
+.speed-gauge::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.rpm-gauge {
+    background: linear-gradient(90deg, #28a745 0%, #ffd700 60%, #e31e24 100%);
+    position: relative;
+}
+
+.rpm-gauge::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    background: #fff;
+    border-radius: 50%;
+}
+
+/* Section des temps */
+.time-section {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.time-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Tableau des temps */
+.lap-table-container {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.lap-table-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+/* Styles pour les temps positifs/négatifs */
+.time-positive {
+    color: var(--danger-color);
+}
+
+.time-negative {
+    color: var(--success-color);
+}
+
+/* Styles pour les boutons de contrôle */
+.session-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.session-controls .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.session-controls .btn i {
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .telemetry-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .session-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .telemetry-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .session-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .session-details {
+        grid-template-columns: 1fr;
+    }
+
+    .session-controls {
+        margin-top: 1rem;
+    }
+
+    .time-display {
+        font-size: 2rem;
+    }
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.time-display.new-best {
+    animation: pulse 0.5s ease-in-out;
+    color: var(--success-color);
+} 

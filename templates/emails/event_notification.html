@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            background-color: #9b59b6;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .event-box {
+            background-color: #f9f0ff;
+            border-left: 4px solid #9b59b6;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .event-title {
+            color: #9b59b6;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        .event-info {
+            margin: 15px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .info-value {
+            color: #333;
+        }
+        .event-description {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .event-description h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .schedule {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .schedule h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .schedule-time {
+            font-weight: bold;
+            color: #9b59b6;
+        }
+        .schedule-event {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #9b59b6;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #8e44ad;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+            }
+            .info-row, .schedule-item {
+                flex-direction: column;
+            }
+            .info-value, .schedule-event {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nouvel événement</h1>
+            <p>{{event_name}}</p>
+        </div>
+        <div class="content">
+            <p>Bonjour {{user_name}},</p>
+            
+            <p>Un nouvel événement a été ajouté à votre calendrier :</p>
+            
+            <div class="event-box">
+                <div class="event-title">{{event_name}}</div>
+                <div class="event-info">
+                    <div class="info-row">
+                        <span class="info-label">Date :</span>
+                        <span class="info-value">{{event_date}}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Circuit :</span>
+                        <span class="info-value">{{circuit_name}}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type d'événement :</span>
+                        <span class="info-value">{{event_type}}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Statut :</span>
+                        <span class="info-value">{{event_status}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-description">
+                <h3>Description</h3>
+                <p>{{event_description}}</p>
+            </div>
+
+            <div class="schedule">
+                <h3>Programme prévisionnel</h3>
+                {{#each schedule}}
+                <div class="schedule-item">
+                    <span class="schedule-time">{{time}}</span>
+                    <span class="schedule-event">{{activity}}</span>
+                </div>
+                {{/each}}
+            </div>
+
+            <p>Pour plus d'informations et pour gérer votre participation, cliquez ci-dessous :</p>
+
+            <div style="text-align: center;">
+                <a href="{{event_url}}" class="button">Voir l'événement</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par l'application de télémétrie.</p>
+            <p>Pour gérer vos préférences de notification, <a href="{{preferences_url}}">cliquez ici</a>.</p>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,684 @@
+/* Styles pour la page des notifications */
+
+.notification-settings {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.settings-section {
+    margin-bottom: 3rem;
+}
+
+.settings-section h2 {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.setting-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--background-light);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.setting-item.active {
+    background: var(--primary-color-light);
+}
+
+.setting-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.setting-info {
+    flex: 1;
+}
+
+.setting-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.setting-info p {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Switch toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Heures calmes */
+.quiet-hours {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.time-input {
+    flex: 1;
+    max-width: 200px;
+}
+
+.time-input label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.time-input input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--text-color);
+    background: var(--background-color);
+}
+
+.help-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+/* Actions du formulaire */
+.form-actions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.btn-primary {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .notification-settings {
+        padding: 1rem;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .setting-item {
+        padding: 1rem;
+    }
+
+    .quiet-hours {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .time-input {
+        max-width: none;
+    }
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+    .setting-item {
+        background: var(--background-dark);
+    }
+
+    .setting-item.active {
+        background: var(--primary-color-dark);
+    }
+
+    .time-input input {
+        background: var(--background-dark);
+        border-color: var(--border-color-dark);
+    }
+
+    .slider {
+        background-color: var(--border-color-dark);
+    }
+
+    .slider:before {
+        background-color: var(--background-light);
+    }
+}
+
+/* Conteneur des notifications */
+.notifications-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Bouton de toggle des notifications */
+.notification-toggle {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.notification-toggle:hover {
+    color: var(--primary-color);
+}
+
+/* Badge de notification */
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--danger-color);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+/* Menu des notifications */
+.notifications-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    max-height: 480px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.notifications-container.active .notifications-menu {
+    display: block;
+}
+
+/* En-tête du menu */
+.notifications-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notifications-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.notifications-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.notifications-actions button {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.notifications-actions button:hover {
+    color: var(--primary-color);
+}
+
+/* Liste des notifications */
+.notifications-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+}
+
+/* Message "Aucune notification" */
+.no-notifications {
+    padding: 32px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.no-notifications i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+}
+
+/* Élément de notification */
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notification-item:hover {
+    background-color: var(--hover-color);
+}
+
+.notification-item.unread {
+    background-color: var(--unread-bg-color);
+}
+
+.notification-item.unread:hover {
+    background-color: var(--unread-hover-color);
+}
+
+/* Icône de notification */
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--icon-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.notification-icon i {
+    font-size: 20px;
+    color: var(--icon-color);
+}
+
+/* Contenu de la notification */
+.notification-content {
+    flex-grow: 1;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.notification-header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.notification-time {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-color);
+    line-height: 1.4;
+}
+
+/* Lien de notification */
+.notification-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.notification-link:hover {
+    color: var(--primary-hover-color);
+}
+
+/* Bouton "Marquer comme lu" */
+.mark-read {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    opacity: 0;
+}
+
+.notification-item:hover .mark-read {
+    opacity: 1;
+}
+
+.mark-read:hover {
+    color: var(--primary-color);
+}
+
+/* Paramètres des notifications */
+.notification-settings {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.settings-section {
+    margin-bottom: 32px;
+}
+
+.settings-section h2 {
+    margin-bottom: 16px;
+    color: var(--text-color);
+    font-size: 20px;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.setting-item:hover {
+    border-color: var(--primary-color);
+}
+
+.setting-info {
+    flex-grow: 1;
+}
+
+.setting-info h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.setting-info p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Switch toggle */
+.setting-toggle {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.setting-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.setting-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-bg-color);
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.setting-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.setting-toggle input:checked + .setting-toggle-slider {
+    background-color: var(--primary-color);
+}
+
+.setting-toggle input:checked + .setting-toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.setting-toggle input:disabled + .setting-toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Heures calmes */
+.quiet-hours {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.time-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.time-input label {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.time-input input {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--input-bg-color);
+}
+
+/* Actions du formulaire */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.form-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-actions button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.form-actions button[type="button"] {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.form-actions button[type="button"]:hover {
+    background-color: var(--hover-color);
+}
+
+/* Toasts */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 16px 24px;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-success {
+    background-color: var(--success-color);
+}
+
+.toast-error {
+    background-color: var(--danger-color);
+}
+
+/* Variables CSS */
+:root {
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --text-color: #333;
+    --text-muted: #6c757d;
+    --bg-color: #fff;
+    --hover-color: #f8f9fa;
+    --border-color: #dee2e6;
+    --icon-bg-color: #e9ecef;
+    --icon-color: #6c757d;
+    --unread-bg-color: #f0f7ff;
+    --unread-hover-color: #e6f0ff;
+    --toggle-bg-color: #dee2e6;
+    --input-bg-color: #fff;
+}
+
+/* Thème sombre */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #0d6efd;
+        --primary-hover-color: #0a58ca;
+        --text-color: #e9ecef;
+        --text-muted: #adb5bd;
+        --bg-color: #212529;
+        --hover-color: #343a40;
+        --border-color: #495057;
+        --icon-bg-color: #343a40;
+        --icon-color: #adb5bd;
+        --unread-bg-color: #1a2634;
+        --unread-hover-color: #2a3744;
+        --toggle-bg-color: #495057;
+        --input-bg-color: #343a40;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .notifications-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 320px;
+        max-height: none;
+        border-radius: 0;
+    }
+
+    .notification-settings {
+        padding: 16px;
+    }
+
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quiet-hours {
+        grid-template-columns: 1fr;
+    }
+} 

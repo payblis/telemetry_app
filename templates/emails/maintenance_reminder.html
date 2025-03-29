@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            background-color: #f39c12;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .maintenance-box {
+            background-color: #fff9e6;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .maintenance-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        .maintenance-info {
+            margin: 15px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .info-value {
+            color: #333;
+        }
+        .checklist {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .checklist h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .checklist ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .checklist li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .checklist li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f39c12;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #d68910;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+            }
+            .info-row {
+                flex-direction: column;
+            }
+            .info-value {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rappel de maintenance</h1>
+            <p>{{motorcycle_name}}</p>
+        </div>
+        <div class="content">
+            <p>Bonjour {{user_name}},</p>
+            
+            <p>Une maintenance est requise pour votre moto :</p>
+            
+            <div class="maintenance-box">
+                <div class="maintenance-title">{{maintenance_title}}</div>
+                <p>{{maintenance_description}}</p>
+                
+                <div class="maintenance-info">
+                    <div class="info-row">
+                        <span class="info-label">Kilométrage actuel :</span>
+                        <span class="info-value">{{current_mileage}} km</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Dernière maintenance :</span>
+                        <span class="info-value">{{last_maintenance_date}}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Heures de fonctionnement :</span>
+                        <span class="info-value">{{engine_hours}} heures</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Priorité :</span>
+                        <span class="info-value">{{priority}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>Points de maintenance à vérifier</h3>
+                <ul>
+                    {{#each maintenance_points}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+
+            <p>Pour planifier cette maintenance ou voir plus de détails, cliquez sur le bouton ci-dessous :</p>
+
+            <div style="text-align: center;">
+                <a href="{{maintenance_url}}" class="button">Gérer la maintenance</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par l'application de télémétrie.</p>
+            <p>Pour gérer vos préférences de notification, <a href="{{preferences_url}}">cliquez ici</a>.</p>
+        </div>
+    </div>
+</body>
+</html> 

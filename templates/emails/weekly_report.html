@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            background-color: #34495e;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .period-box {
+            background-color: #f5f6fa;
+            border-left: 4px solid #34495e;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .period-title {
+            color: #34495e;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-item {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 5px 0;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        .progress-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .progress-section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .progress-item {
+            margin: 15px 0;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .progress-title {
+            font-weight: bold;
+        }
+        .progress-value {
+            color: #34495e;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #34495e;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .circuits {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .circuits h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .circuit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .circuit-info {
+            flex: 1;
+        }
+        .circuit-name {
+            font-weight: bold;
+            color: #34495e;
+        }
+        .circuit-stats {
+            font-size: 14px;
+            color: #666;
+        }
+        .recommendations {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .recommendations h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .recommendation-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #34495e;
+        }
+        .recommendation-content {
+            flex: 1;
+        }
+        .recommendation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .recommendation-description {
+            font-size: 14px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #34495e;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #2c3e50;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .circuit-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .circuit-stats {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rapport hebdomadaire</h1>
+            <p>{{start_date}} - {{end_date}}</p>
+        </div>
+        <div class="content">
+            <p>Bonjour {{user_name}},</p>
+            
+            <p>Voici votre rapport hebdomadaire de performance :</p>
+            
+            <div class="period-box">
+                <div class="period-title">Aperçu de la semaine</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Sessions</div>
+                        <div class="stat-value">{{total_sessions}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Tours</div>
+                        <div class="stat-value">{{total_laps}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Temps total</div>
+                        <div class="stat-value">{{total_time}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Meilleur temps</div>
+                        <div class="stat-value">{{best_lap}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3>Progression des objectifs</h3>
+                {{#each goals}}
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-title">{{title}}</span>
+                        <span class="progress-value">{{progress}}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{progress}}%"></div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <div class="circuits">
+                <h3>Performance par circuit</h3>
+                {{#each circuits}}
+                <div class="circuit-item">
+                    <div class="circuit-info">
+                        <div class="circuit-name">{{name}}</div>
+                        <div class="circuit-stats">{{sessions}} sessions - Meilleur temps : {{best_lap}}</div>
+                    </div>
+                    <a href="{{circuit_url}}" class="button" style="padding: 5px 10px; font-size: 14px;">Voir</a>
+                </div>
+                {{/each}}
+            </div>
+
+            <div class="recommendations">
+                <h3>Recommandations pour la semaine à venir</h3>
+                {{#each recommendations}}
+                <div class="recommendation-item">
+                    <div class="recommendation-icon">{{icon}}</div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">{{title}}</div>
+                        <div class="recommendation-description">{{description}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <p>Pour voir le rapport complet avec des analyses détaillées et des graphiques, cliquez ci-dessous :</p>
+
+            <div style="text-align: center;">
+                <a href="{{report_url}}" class="button">Voir le rapport complet</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par l'application de télémétrie.</p>
+            <p>Pour gérer vos préférences de notification, <a href="{{preferences_url}}">cliquez ici</a>.</p>
+        </div>
+    </div>
+</body>
+</html> 
