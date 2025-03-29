@@ -1,6 +1,6 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Vérifier la connexion à la base de données
 $conn = getDBConnection();
@@ -13,7 +13,7 @@ include_once __DIR__ . '/../includes/header.php';
     <h2 class="card-title">Liste des Circuits</h2>
     
     <div class="mb-3">
-        <a href="/telemoto/circuits/create.php" class="btn btn-primary">
+        <a href="<?php echo url('circuits/create.php'); ?>" class="btn btn-primary">
             <i class="fas fa-plus"></i> Ajouter un circuit
         </a>
     </div>
@@ -44,13 +44,13 @@ include_once __DIR__ . '/../includes/header.php';
                     <td>' . ($row['longueur'] ? htmlspecialchars($row['longueur']) . ' km' : '-') . '</td>
                     <td>' . ($row['largeur'] ? htmlspecialchars($row['largeur']) . ' m' : '-') . '</td>
                     <td class="table-actions">
-                        <a href="/telemoto/circuits/view.php?id=' . $row['id'] . '" class="btn btn-sm btn-view">
+                        <a href="' . url('circuits/view.php?id=' . $row['id']) . '" class="btn btn-sm btn-view">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="/telemoto/circuits/edit.php?id=' . $row['id'] . '" class="btn btn-sm btn-edit">
+                        <a href="' . url('circuits/edit.php?id=' . $row['id']) . '" class="btn btn-sm btn-edit">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="/telemoto/circuits/delete.php?id=' . $row['id'] . '" class="btn btn-sm btn-delete">
+                        <a href="' . url('circuits/delete.php?id=' . $row['id']) . '" class="btn btn-sm btn-delete">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

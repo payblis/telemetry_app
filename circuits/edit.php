@@ -1,13 +1,13 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Vérifier la connexion à la base de données
 $conn = getDBConnection();
 
 // Vérifier si l'ID est fourni
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header("Location: /telemoto/circuits/index.php?error=1");
+    header("Location: " . url('circuits/index.php?error=1'));
     exit;
 }
 
@@ -21,7 +21,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: /telemoto/circuits/index.php?error=2");
+    header("Location: " . url('circuits/index.php?error=2'));
     exit;
 }
 
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($stmt->execute()) {
             // Redirection vers la liste des circuits avec un message de succès
-            header("Location: /telemoto/circuits/index.php?success=2");
+            header("Location: " . url('circuits/index.php?success=2'));
             exit;
         } else {
             $message = "Erreur lors de la modification du circuit : " . $conn->error;
@@ -110,7 +110,7 @@ Virage 2 (gauche, angle 90°, 2ème rapport, vitesse apex ~80 km/h)
         </div>
         
         <div class="form-actions">
-            <a href="/telemoto/circuits/index.php" class="btn">Annuler</a>
+            <a href="<?php echo url('circuits/index.php'); ?>" class="btn">Annuler</a>
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </div>
     </form>

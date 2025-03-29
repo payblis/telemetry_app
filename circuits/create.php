@@ -1,6 +1,6 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../api/chatgpt.php';
 
 // Vérifier la connexion à la base de données
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($stmt->execute()) {
                 // Redirection vers la liste des circuits avec un message de succès
-                header("Location: /telemoto/circuits/index.php?success=1");
+                header("Location: " . url('circuits/index.php?success=1'));
                 exit;
             } else {
                 $message = "Erreur lors de l'ajout du circuit : " . $conn->error;
@@ -112,7 +112,7 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
         
         <div class="form-actions">
-            <a href="/telemoto/circuits/index.php" class="btn">Annuler</a>
+            <a href="<?php echo url('circuits/index.php'); ?>" class="btn">Annuler</a>
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-robot"></i> Importer les données via IA
             </button>

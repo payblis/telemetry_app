@@ -1,13 +1,13 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Vérifier la connexion à la base de données
 $conn = getDBConnection();
 
 // Vérifier si l'ID est fourni
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header("Location: /telemoto/circuits/index.php?error=1");
+    header("Location: " . url('circuits/index.php?error=1'));
     exit;
 }
 
@@ -21,7 +21,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: /telemoto/circuits/index.php?error=2");
+    header("Location: " . url('circuits/index.php?error=2'));
     exit;
 }
 
@@ -35,10 +35,10 @@ include_once __DIR__ . '/../includes/header.php';
     <h2 class="card-title">Détails du Circuit</h2>
     
     <div class="mb-3">
-        <a href="/telemoto/circuits/index.php" class="btn">
+        <a href="<?php echo url('circuits/index.php'); ?>" class="btn">
             <i class="fas fa-arrow-left"></i> Retour à la liste
         </a>
-        <a href="/telemoto/circuits/edit.php?id=<?php echo $circuit['id']; ?>" class="btn btn-primary">
+        <a href="<?php echo url('circuits/edit.php?id=' . $circuit['id']); ?>" class="btn btn-primary">
             <i class="fas fa-edit"></i> Modifier
         </a>
     </div>
@@ -135,7 +135,7 @@ include_once __DIR__ . '/../includes/header.php';
                     <td>' . htmlspecialchars($session['pilote_prenom'] . ' ' . $session['pilote_nom']) . '</td>
                     <td>' . htmlspecialchars($session['marque'] . ' ' . $session['modele']) . '</td>
                     <td class="table-actions">
-                        <a href="/telemoto/sessions/view.php?id=' . $session['id'] . '" class="btn btn-sm btn-view">
+                        <a href="' . url('sessions/view.php?id=' . $session['id']) . '" class="btn btn-sm btn-view">
                             <i class="fas fa-eye"></i>
                         </a>
                     </td>
