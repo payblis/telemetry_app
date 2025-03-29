@@ -1,6 +1,6 @@
 <?php
 // Configuration de l'API OpenAI
-define('OPENAI_API_KEY', 'votre_cle_api_openai');
+define('OPENAI_API_KEY', 'votre-cle-api');
 define('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions');
 define('OPENAI_MODEL', 'gpt-4');
 
