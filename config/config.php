@@ -2,23 +2,24 @@
 // Fichier de configuration central pour l'application TeleMoto
 // Définir le chemin de base de l'application
 
-// Détection automatique du chemin de base
-$script_name = $_SERVER['SCRIPT_NAME'];
-$script_path = dirname($script_name);
-$base_path = rtrim(str_replace('\\', '/', $script_path), '/');
+// Obtenir le chemin physique du dossier racine de l'application
+$root_path = dirname(__DIR__);
+$root_path = str_replace('\\', '/', $root_path);
 
-// Si l'application est à la racine, $base_path sera vide, donc on met '/'
-if (empty($base_path)) {
+// Obtenir le chemin du script actuel
+$script_path = $_SERVER['SCRIPT_NAME'];
+$script_path = str_replace('\\', '/', $script_path);
+
+// Calculer le chemin de base relatif à la racine du serveur web
+$base_path = dirname($script_path);
+$base_path = str_replace('\\', '/', $base_path);
+
+// Si le chemin de base est vide ou est '.', utiliser '/'
+if (empty($base_path) || $base_path === '.') {
     $base_path = '/';
 } else {
-    // Sinon, on remonte à la racine de l'application
-    $base_path = dirname($base_path);
-    $base_path = rtrim($base_path, '/');
-    // Si le chemin contient /telemoto/, on le retire
-    if (strpos($base_path, '/telemoto') !== false) {
-        $base_path = str_replace('/telemoto', '', $base_path);
-    }
-    $base_path = $base_path ? $base_path . '/' : '/';
+    // S'assurer que le chemin commence et se termine par un slash
+    $base_path = '/' . trim($base_path, '/') . '/';
 }
 
 // URL de base pour les liens
