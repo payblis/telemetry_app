@@ -104,11 +104,13 @@ function requireExpert() {
  * @param int $userId ID de l'utilisateur
  * @param string $username Nom d'utilisateur
  * @param string $role Rôle de l'utilisateur
+ * @param string $telemetricianName Nom du télémétriste
  */
-function loginUser($userId, $username, $role) {
+function loginUser($userId, $username, $role, $telemetricianName) {
     $_SESSION['user_id'] = $userId;
     $_SESSION['username'] = $username;
     $_SESSION['user_role'] = $role;
+    $_SESSION['telemetrician_name'] = $telemetricianName;
     
     // Régénérer l'ID de session pour éviter les attaques de fixation de session
     session_regenerate_id(true);

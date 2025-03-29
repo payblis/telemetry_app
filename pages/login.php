@@ -36,7 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "</div>";
             
             // Connecter l'utilisateur
-            loginUser($userData['id'], $userData['username'], $userData['role']);
+            loginUser(
+                $userData['id'], 
+                $userData['username'], 
+                $userData['role'],
+                $userData['telemetrician_name'] ?? $userData['username']
+            );
             
             // Rediriger vers le tableau de bord
             header('Location: ' . BASE_URL . '/index.php?page=dashboard');
