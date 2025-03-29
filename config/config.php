@@ -23,29 +23,8 @@ $css_path = $base_url . 'css/';
 $js_path = $base_url . 'js/';
 $images_path = $base_url . 'images/';
 
-// Paramètres de connexion à la base de données
-$db_host = 'localhost';
-$db_name = 'test2';
-$db_user = 'test2';
-$db_pass = 'Ei58~99wt';
-
-// Fonction pour obtenir la connexion à la base de données
-function getDBConnection() {
-    global $db_host, $db_name, $db_user, $db_pass;
-    
-    // Créer la connexion
-    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-    
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Erreur de connexion à la base de données: " . $conn->connect_error);
-    }
-    
-    // Définir l'encodage des caractères
-    $conn->set_charset("utf8");
-    
-    return $conn;
-}
+// Inclure la configuration de la base de données
+require_once __DIR__ . '/database.php';
 
 // Fonction pour générer des URLs
 function url($path = '') {
