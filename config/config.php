@@ -2,28 +2,8 @@
 // Fichier de configuration central pour l'application TeleMoto
 // Définir le chemin de base de l'application
 
-// Obtenir le chemin physique du dossier racine de l'application
-$root_path = dirname(__DIR__);
-$root_path = str_replace('\\', '/', $root_path);
-
-// Obtenir le chemin du script actuel
-$script_path = $_SERVER['SCRIPT_NAME'];
-$script_path = str_replace('\\', '/', $script_path);
-
-// Calculer le chemin de base relatif à la racine du serveur web
-$base_path = dirname($script_path);
-$base_path = str_replace('\\', '/', $base_path);
-
-// Si le chemin de base est vide ou est '.', utiliser '/'
-if (empty($base_path) || $base_path === '.') {
-    $base_path = '/';
-} else {
-    // S'assurer que le chemin commence et se termine par un slash
-    $base_path = '/' . trim($base_path, '/') . '/';
-}
-
-// URL de base pour les liens
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$base_path";
+// URL de base pour les liens (racine du domaine)
+$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
 
 // Chemins pour les ressources
 $css_path = $base_url . 'css/';
