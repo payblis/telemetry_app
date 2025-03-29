@@ -14,6 +14,10 @@ if (empty($base_path)) {
     // Sinon, on remonte à la racine de l'application
     $base_path = dirname($base_path);
     $base_path = rtrim($base_path, '/');
+    // Si le chemin contient /telemoto/, on le retire
+    if (strpos($base_path, '/telemoto') !== false) {
+        $base_path = str_replace('/telemoto', '', $base_path);
+    }
     $base_path = $base_path ? $base_path . '/' : '/';
 }
 
