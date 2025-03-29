@@ -47,19 +47,19 @@ try {
                 <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Catégorie</th>
-                        <th>Niveau</th>
+                        <th>Taille</th>
+                        <th>Poids</th>
+                        <th>Expérience</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($pilots as $pilot): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($pilot['lastname']); ?></td>
-                        <td><?php echo htmlspecialchars($pilot['firstname']); ?></td>
-                        <td><?php echo htmlspecialchars($pilot['category']); ?></td>
-                        <td><?php echo htmlspecialchars($pilot['level']); ?></td>
+                        <td><?php echo htmlspecialchars($pilot['name']); ?></td>
+                        <td><?php echo htmlspecialchars($pilot['height']); ?> cm</td>
+                        <td><?php echo htmlspecialchars($pilot['weight']); ?> kg</td>
+                        <td><?php echo htmlspecialchars($pilot['experience']); ?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="index.php?page=pilot_edit&id=<?php echo $pilot['id']; ?>" 

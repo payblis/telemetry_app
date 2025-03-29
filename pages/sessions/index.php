@@ -47,21 +47,23 @@ try {
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Circuit</th>
+                        <th>Type</th>
                         <th>Pilote</th>
                         <th>Moto</th>
-                        <th>Type</th>
+                        <th>Circuit</th>
+                        <th>Conditions</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($sessions as $session): ?>
                     <tr>
-                        <td><?php echo date('d/m/Y H:i', strtotime($session['date'])); ?></td>
-                        <td><?php echo htmlspecialchars($session['circuit_name']); ?></td>
+                        <td><?php echo htmlspecialchars($session['date']); ?></td>
+                        <td><?php echo htmlspecialchars($session['session_type']); ?></td>
                         <td><?php echo htmlspecialchars($session['pilot_name']); ?></td>
-                        <td><?php echo htmlspecialchars($session['moto_name']); ?></td>
-                        <td><?php echo htmlspecialchars($session['type']); ?></td>
+                        <td><?php echo htmlspecialchars($session['moto_brand'] . ' ' . $session['moto_model']); ?></td>
+                        <td><?php echo htmlspecialchars($session['circuit_name']); ?></td>
+                        <td><?php echo htmlspecialchars($session['weather_conditions']); ?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="index.php?page=session_edit&id=<?php echo $session['id']; ?>" 

@@ -48,8 +48,8 @@ try {
                     <tr>
                         <th>Marque</th>
                         <th>Modèle</th>
+                        <th>Cylindrée</th>
                         <th>Année</th>
-                        <th>Catégorie</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -58,8 +58,8 @@ try {
                     <tr>
                         <td><?php echo htmlspecialchars($moto['brand']); ?></td>
                         <td><?php echo htmlspecialchars($moto['model']); ?></td>
+                        <td><?php echo htmlspecialchars($moto['engine_capacity']); ?> cc</td>
                         <td><?php echo htmlspecialchars($moto['year']); ?></td>
-                        <td><?php echo htmlspecialchars($moto['category']); ?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="index.php?page=moto_edit&id=<?php echo $moto['id']; ?>" 

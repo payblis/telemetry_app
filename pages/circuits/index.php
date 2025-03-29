@@ -49,7 +49,8 @@ try {
                         <th>Nom</th>
                         <th>Pays</th>
                         <th>Longueur</th>
-                        <th>Type</th>
+                        <th>Largeur</th>
+                        <th>Nombre de virages</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -58,8 +59,9 @@ try {
                     <tr>
                         <td><?php echo htmlspecialchars($circuit['name']); ?></td>
                         <td><?php echo htmlspecialchars($circuit['country']); ?></td>
-                        <td><?php echo htmlspecialchars($circuit['length']); ?> km</td>
-                        <td><?php echo htmlspecialchars($circuit['type']); ?></td>
+                        <td><?php echo htmlspecialchars($circuit['length']); ?> m</td>
+                        <td><?php echo htmlspecialchars($circuit['width']); ?> m</td>
+                        <td><?php echo htmlspecialchars($circuit['corners_count']); ?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="index.php?page=circuit_edit&id=<?php echo $circuit['id']; ?>" 
