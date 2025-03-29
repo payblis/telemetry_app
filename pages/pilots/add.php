@@ -17,24 +17,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pilot = new Pilot();
         
         // Valider les données
-        $lastname = trim($_POST['lastname'] ?? '');
-        $firstname = trim($_POST['firstname'] ?? '');
-        $category = trim($_POST['category'] ?? '');
-        $level = trim($_POST['level'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $height = intval($_POST['height'] ?? 0);
+        $weight = intval($_POST['weight'] ?? 0);
+        $experience = trim($_POST['experience'] ?? '');
         
-        if (empty($lastname) || empty($firstname) || empty($category) || empty($level)) {
-            throw new Exception("Tous les champs sont obligatoires.");
+        if (empty($name) || $height <= 0 || $weight <= 0 || empty($experience)) {
+            throw new Exception("Tous les champs sont obligatoires et doivent être valides.");
         }
         
         // Créer le pilote
-        $pilotId = $pilot->create([
-            'user_id' => $_SESSION['user_id'],
-            'lastname' => $lastname,
-            'firstname' => $firstname,
-            'category' => $category,
-            'level' => $level,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        $pilotId = $pilot->create(
+            $name,
+            $height,
+            $weight,
+            $experience,
+            $_SESSION['user_id']
+        );
         
         if ($pilotId) {
             $success = "Pilote ajouté avec succès !";
@@ -65,43 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" class="needs-validation" novalidate>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="lastname" class="form-label">Nom</label>
-                <input type="text" class="form-control" id="lastname" name="lastname" required>
+                <label for="name" class="form-label">Nom du pilote</label>
+                <input type="text" class="form-control" id="name" name="name" required>
                 <div class="invalid-feedback">
                     Le nom est requis.
                 </div>
             </div>
             
             <div class="col-md-6 mb-3">
-                <label for="firstname" class="form-label">Prénom</label>
-                <input type="text" class="form-control" id="firstname" name="firstname" required>
-                <div class="invalid-feedback">
-                    Le prénom est requis.
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="category" class="form-label">Catégorie</label>
-                <select class="form-select" id="category" name="category" required>
-                    <option value="">Sélectionner une catégorie</option>
-                    <option value="MotoGP">MotoGP</option>
-                    <option value="Moto2">Moto2</option>
-                    <option value="Moto3">Moto3</option>
-                    <option value="Superbike">Superbike</option>
-                    <option value="Supersport">Supersport</option>
-                    <option value="Endurance">Endurance</option>
-                </select>
-                <div class="invalid-feedback">
-                    La catégorie est requise.
-                </div>
-            </div>
-            
-            <div class="col-md-6 mb-3">
-                <label for="level" class="form-label">Niveau</label>
-                <select class="form-select" id="level" name="level" required>
-                    <option value="">Sélectionner un niveau</option>
+                <label for="experience" class="form-label">Expérience</label>
+                <select class="form-select" id="experience" name="experience" required>
+                    <option value="">Sélectionner l'expérience</option>
                     <option value="Débutant">Débutant</option>
                     <option value="Intermédiaire">Intermédiaire</option>
                     <option value="Avancé">Avancé</option>
@@ -109,7 +82,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Professionnel">Professionnel</option>
                 </select>
                 <div class="invalid-feedback">
-                    Le niveau est requis.
+                    L'expérience est requise.
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="height" class="form-label">Taille (cm)</label>
+                <input type="number" class="form-control" id="height" name="height" min="100" max="250" required>
+                <div class="invalid-feedback">
+                    La taille doit être comprise entre 100 et 250 cm.
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label for="weight" class="form-label">Poids (kg)</label>
+                <input type="number" class="form-control" id="weight" name="weight" min="30" max="200" required>
+                <div class="invalid-feedback">
+                    Le poids doit être compris entre 30 et 200 kg.
                 </div>
             </div>
         </div>
