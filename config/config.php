@@ -17,7 +17,7 @@ define('ASSETS_PATH', ROOT_PATH . '/assets');
 define('API_PATH', ROOT_PATH . '/api');
 
 // URL de base (à modifier selon l'environnement)
-define('BASE_URL', 'http://localhost/telemoto_simple');
+define('BASE_URL', 'https://test2.payblis.com');
 
 // Configuration de l'API ChatGPT
 define('OPENAI_API_KEY', 'votre_clé_api_ici'); // À remplacer par la clé API réelle
