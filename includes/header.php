@@ -10,6 +10,7 @@ require_once __DIR__ . '/../config/config.php';
     <title>TeleMoto - Application d'Assistance Technique Moto Racing</title>
     <link rel="stylesheet" href="<?php echo $css_path; ?>style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="<?php echo $js_path; ?>main.js" defer></script>
 </head>
 <body>
     <header>

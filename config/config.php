@@ -11,8 +11,10 @@ $base_path = rtrim(str_replace('\\', '/', $script_path), '/');
 if (empty($base_path)) {
     $base_path = '/';
 } else {
-    // Sinon, on s'assure qu'il y a un slash à la fin
-    $base_path = $base_path . '/';
+    // Sinon, on remonte à la racine de l'application
+    $base_path = dirname($base_path);
+    $base_path = rtrim($base_path, '/');
+    $base_path = $base_path ? $base_path . '/' : '/';
 }
 
 // URL de base pour les liens
