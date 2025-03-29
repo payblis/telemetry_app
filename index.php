@@ -1,197 +1,106 @@
 <?php
-// Définir un répertoire de session personnalisé
-$custom_session_path = __DIR__ . '/sessions';
-if (!file_exists($custom_session_path)) {
-    mkdir($custom_session_path, 0755, true);
+/**
+ * Fichier d'index principal
+ * Point d'entrée de l'application
+ */
+
+// Inclure la configuration
+require_once 'config/config.php';
+
+// Inclure les fonctions utilitaires
+require_once 'includes/functions.php';
+
+// Vérifier l'authentification
+require_once 'includes/auth.php';
+
+// Déterminer la page à afficher
+$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+
+// Vérifier si l'utilisateur est connecté
+if (!isLoggedIn() && $page != 'login' && $page != 'register') {
+    // Rediriger vers la page de connexion
+    header('Location: ' . BASE_URL . '/index.php?page=login');
+    exit;
 }
-session_save_path($custom_session_path);
 
-require_once 'config.php';
-require_once 'database.php';
-session_start();
-?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telemetry App - Assistant Moto</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background: #f4f4f4;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-        .main-content {
-            display: flex;
-            gap: 20px;
-        }
-        .session-panel {
-            flex: 1;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .chat-panel {
-            flex: 2;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn:hover {
-            background: #0056b3;
-        }
-        .circuit-select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .chat-messages {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .user-message {
-            background: #e3f2fd;
-            margin-left: 20%;
-        }
-        .ai-message {
-            background: #f5f5f5;
-            margin-right: 20%;
-        }
-        .chat-input {
-            display: flex;
-            gap: 10px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Telemetry App - Assistant Moto</h1>
-    </div>
-    
-    <div class="container">
-        <div class="main-content">
-            <div class="session-panel">
-                <h2>Nouvelle Session</h2>
-                <button class="btn" onclick="createNewSession()">Créer une session</button>
-                <select class="circuit-select" id="circuitSelect">
-                    <option value="">Sélectionnez un circuit</option>
-                    <option value="lemans">Circuit du Mans</option>
-                    <option value="nogaro">Circuit de Nogaro</option>
-                    <option value="barcelone">Circuit de Barcelone</option>
-                </select>
-                <div id="circuitInfo"></div>
-            </div>
-            
-            <div class="chat-panel">
-                <h2>Conversation avec l'Assistant</h2>
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="chat-input">
-                    <input type="text" id="messageInput" placeholder="Posez votre question...">
-                    <button class="btn" onclick="sendMessage()">Envoyer</button>
-                </div>
-            </div>
-        </div>
-    </div>
+// Inclure l'en-tête
+include_once 'includes/header.php';
 
-    <script>
-        const SITE_URL = '<?php echo SITE_URL; ?>';
-        
-        function createNewSession() {
-            const circuit = document.getElementById('circuitSelect').value;
-            if (!circuit) {
-                alert('Veuillez sélectionner un circuit');
-                return;
-            }
-            // Appel AJAX pour créer une nouvelle session
-            fetch(SITE_URL + '/api/create_session.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ circuit: circuit })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('circuitInfo').innerHTML = data.circuitInfo;
-            });
-        }
+// Charger la page demandée
+switch ($page) {
+    case 'login':
+        include_once 'pages/login.php';
+        break;
+    case 'register':
+        include_once 'pages/register.php';
+        break;
+    case 'dashboard':
+        include_once 'pages/dashboard.php';
+        break;
+    case 'pilots':
+        include_once 'pages/pilots/index.php';
+        break;
+    case 'pilot_add':
+        include_once 'pages/pilots/add.php';
+        break;
+    case 'pilot_edit':
+        include_once 'pages/pilots/edit.php';
+        break;
+    case 'pilot_view':
+        include_once 'pages/pilots/view.php';
+        break;
+    case 'motos':
+        include_once 'pages/motos/index.php';
+        break;
+    case 'moto_add':
+        include_once 'pages/motos/add.php';
+        break;
+    case 'moto_edit':
+        include_once 'pages/motos/edit.php';
+        break;
+    case 'moto_view':
+        include_once 'pages/motos/view.php';
+        break;
+    case 'circuits':
+        include_once 'pages/circuits/index.php';
+        break;
+    case 'circuit_add':
+        include_once 'pages/circuits/add.php';
+        break;
+    case 'circuit_edit':
+        include_once 'pages/circuits/edit.php';
+        break;
+    case 'circuit_view':
+        include_once 'pages/circuits/view.php';
+        break;
+    case 'sessions':
+        include_once 'pages/sessions/index.php';
+        break;
+    case 'session_add':
+        include_once 'pages/sessions/add.php';
+        break;
+    case 'session_edit':
+        include_once 'pages/sessions/edit.php';
+        break;
+    case 'session_view':
+        include_once 'pages/sessions/view.php';
+        break;
+    case 'ai_chat':
+        include_once 'pages/ai/chat.php';
+        break;
+    case 'ai_feedbacks':
+        include_once 'pages/ai/feedbacks.php';
+        break;
+    case 'profile':
+        include_once 'pages/profile.php';
+        break;
+    case 'logout':
+        include_once 'pages/logout.php';
+        break;
+    default:
+        include_once 'pages/404.php';
+        break;
+}
 
-        function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const message = messageInput.value;
-            if (!message) return;
-
-            // Afficher le message de l'utilisateur
-            appendMessage(message, true);
-            messageInput.value = '';
-
-            // Appel AJAX pour envoyer le message à l'API
-            fetch(SITE_URL + '/api/chat.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                appendMessage(data.response, false);
-            });
-        }
-
-        function appendMessage(message, isUser) {
-            const chatMessages = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-            messageDiv.textContent = message;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    </script>
-</body>
-</html> 
+// Inclure le pied de page
+include_once 'includes/footer.php';
