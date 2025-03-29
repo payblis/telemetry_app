@@ -11,7 +11,7 @@ class AIFeedback {
      * Constructeur
      */
     public function __construct() {
-        $this->db = Database::getInstance();
+        $this->db = Database::getInstance()->getConnection();
         $this->chatGPT = new ChatGPT();
     }
     
@@ -232,5 +232,55 @@ class AIFeedback {
         }
         
         return $stats;
+    }
+
+    public function getAllByUserId($userId) {
+        try {
+            $sql = "SELECT af.*, s.name as session_name 
+                    FROM ai_feedback af 
+                    LEFT JOIN sessions s ON af.session_id = s.id 
+                    WHERE af.user_id = :user_id 
+                    ORDER BY af.created_at DESC";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':user_id' => $userId]);
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération des feedbacks IA : " . $e->getMessage());
+            throw new Exception("Erreur lors de la récupération des feedbacks IA");
+        }
+    }
+
+    public function getRecentByUserId($userId, $limit = 5) {
+        try {
+            $sql = "SELECT af.*, s.name as session_name 
+                    FROM ai_feedback af 
+                    LEFT JOIN sessions s ON af.session_id = s.id 
+                    WHERE af.user_id = :user_id 
+                    ORDER BY af.created_at DESC 
+                    LIMIT :limit";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération des feedbacks IA récents : " . $e->getMessage());
+            throw new Exception("Erreur lors de la récupération des feedbacks IA récents");
+        }
+    }
+
+    public function delete($id) {
+        try {
+            $sql = "DELETE FROM ai_feedback WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression du feedback IA : " . $e->getMessage());
+            throw new Exception("Erreur lors de la suppression du feedback IA");
+        }
     }
 }
