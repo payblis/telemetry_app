@@ -13,7 +13,7 @@ include_once __DIR__ . '/../includes/header.php';
     <h2 class="card-title">Liste des Pilotes</h2>
     
     <div class="mb-3">
-        <a href="/telemoto/pilotes/create.php" class="btn btn-primary">
+        <a href="<?php echo url('pilotes/create.php'); ?>" class="btn btn-primary">
             <i class="fas fa-plus"></i> Ajouter un pilote
         </a>
     </div>
@@ -46,13 +46,13 @@ include_once __DIR__ . '/../includes/header.php';
                     <td>' . ($row['poids'] ? htmlspecialchars($row['poids']) . ' kg' : '-') . '</td>
                     <td>' . htmlspecialchars($row['championnat']) . '</td>
                     <td class="table-actions">
-                        <a href="/telemoto/pilotes/view.php?id=' . $row['id'] . '" class="btn btn-sm btn-view">
+                        <a href="' . url('pilotes/view.php?id=' . $row['id']) . '" class="btn btn-sm btn-view">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="/telemoto/pilotes/edit.php?id=' . $row['id'] . '" class="btn btn-sm btn-edit">
+                        <a href="' . url('pilotes/edit.php?id=' . $row['id']) . '" class="btn btn-sm btn-edit">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="/telemoto/pilotes/delete.php?id=' . $row['id'] . '" class="btn btn-sm btn-delete">
+                        <a href="' . url('pilotes/delete.php?id=' . $row['id']) . '" class="btn btn-sm btn-delete">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>
