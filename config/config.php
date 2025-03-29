@@ -1,44 +1,54 @@
 <?php
-/**
- * Configuration générale de l'application
- */
+// Fichier de configuration central pour l'application TeleMoto
+// Définir le chemin de base de l'application
 
-// Informations sur l'application
-define('APP_NAME', 'TéléMoto');
-define('APP_VERSION', '1.0.0');
+// Détection automatique du chemin de base
+$script_name = $_SERVER['SCRIPT_NAME'];
+$script_path = dirname($script_name);
+$base_path = rtrim(str_replace('\\', '/', $script_path), '/');
 
-// Chemins de l'application
-define('ROOT_PATH', dirname(__DIR__));
-define('CONFIG_PATH', ROOT_PATH . '/config');
-define('CLASSES_PATH', ROOT_PATH . '/classes');
-define('INCLUDES_PATH', ROOT_PATH . '/includes');
-define('PAGES_PATH', ROOT_PATH . '/pages');
-define('ASSETS_PATH', ROOT_PATH . '/assets');
-define('API_PATH', ROOT_PATH . '/api');
+// Si l'application est à la racine, $base_path sera vide, donc on met '/'
+if (empty($base_path)) {
+    $base_path = '/';
+} else {
+    // Sinon, on s'assure qu'il y a un slash à la fin
+    $base_path = $base_path . '/';
+}
 
-// URL de base (à modifier selon l'environnement)
-define('BASE_URL', 'https://test2.payblis.com');
+// URL de base pour les liens
+$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$base_path";
 
-// Configuration de l'API ChatGPT
-define('OPENAI_API_KEY', 'votre_clé_api_ici'); // À remplacer par la clé API réelle
+// Chemins pour les ressources
+$css_path = $base_url . 'css/';
+$js_path = $base_url . 'js/';
+$images_path = $base_url . 'images/';
 
-// Configuration des sessions
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-session_start();
+// Paramètres de connexion à la base de données
+$db_host = 'localhost';
+$db_name = 'test2';
+$db_user = 'test2';
+$db_pass = 'Ei58~99wt';
 
-// Fuseau horaire
-date_default_timezone_set('Europe/Paris');
-
-// Affichage des erreurs (à désactiver en production)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Fonction d'autoloading des classes
-spl_autoload_register(function ($class_name) {
-    $file = CLASSES_PATH . '/' . $class_name . '.php';
-    if (file_exists($file)) {
-        require_once $file;
+// Fonction pour obtenir la connexion à la base de données
+function getDBConnection() {
+    global $db_host, $db_name, $db_user, $db_pass;
+    
+    // Créer la connexion
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    
+    // Vérifier la connexion
+    if ($conn->connect_error) {
+        die("Erreur de connexion à la base de données: " . $conn->connect_error);
     }
-});
+    
+    // Définir l'encodage des caractères
+    $conn->set_charset("utf8");
+    
+    return $conn;
+}
+
+// Fonction pour générer des URLs
+function url($path = '') {
+    global $base_url;
+    return $base_url . ltrim($path, '/');
+}

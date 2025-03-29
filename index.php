@@ -1,106 +1,68 @@
 <?php
-/**
- * Fichier d'index principal
- * Point d'entrée de l'application
- */
-
-// Inclure la configuration
-require_once 'config/config.php';
-
-// Inclure les fonctions utilitaires
-require_once 'includes/functions.php';
-
-// Vérifier l'authentification
-require_once 'includes/auth.php';
-
-// Déterminer la page à afficher
-$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-
-// Vérifier si l'utilisateur est connecté
-if (!isLoggedIn() && $page != 'login' && $page != 'register') {
-    // Rediriger vers la page de connexion
-    header('Location: ' . BASE_URL . '/index.php?page=login');
-    exit;
-}
+// Inclure le fichier de configuration
+require_once __DIR__ . '/config/config.php';
 
 // Inclure l'en-tête
-include_once 'includes/header.php';
+include_once __DIR__ . '/includes/header.php';
+?>
 
-// Charger la page demandée
-switch ($page) {
-    case 'login':
-        include_once 'pages/login.php';
-        break;
-    case 'register':
-        include_once 'pages/register.php';
-        break;
-    case 'dashboard':
-        include_once 'pages/dashboard.php';
-        break;
-    case 'pilots':
-        include_once 'pages/pilots/index.php';
-        break;
-    case 'pilot_add':
-        include_once 'pages/pilots/add.php';
-        break;
-    case 'pilot_edit':
-        include_once 'pages/pilots/edit.php';
-        break;
-    case 'pilot_view':
-        include_once 'pages/pilots/view.php';
-        break;
-    case 'motos':
-        include_once 'pages/motos/index.php';
-        break;
-    case 'moto_add':
-        include_once 'pages/motos/add.php';
-        break;
-    case 'moto_edit':
-        include_once 'pages/motos/edit.php';
-        break;
-    case 'moto_view':
-        include_once 'pages/motos/view.php';
-        break;
-    case 'circuits':
-        include_once 'pages/circuits/index.php';
-        break;
-    case 'circuit_add':
-        include_once 'pages/circuits/add.php';
-        break;
-    case 'circuit_edit':
-        include_once 'pages/circuits/edit.php';
-        break;
-    case 'circuit_view':
-        include_once 'pages/circuits/view.php';
-        break;
-    case 'sessions':
-        include_once 'pages/sessions/index.php';
-        break;
-    case 'session_add':
-        include_once 'pages/sessions/add.php';
-        break;
-    case 'session_edit':
-        include_once 'pages/sessions/edit.php';
-        break;
-    case 'session_view':
-        include_once 'pages/sessions/view.php';
-        break;
-    case 'ai_chat':
-        include_once 'pages/ai/chat.php';
-        break;
-    case 'ai_feedbacks':
-        include_once 'pages/ai/feedbacks.php';
-        break;
-    case 'profile':
-        include_once 'pages/profile.php';
-        break;
-    case 'logout':
-        include_once 'pages/logout.php';
-        break;
-    default:
-        include_once 'pages/404.php';
-        break;
-}
+<div class="dashboard">
+    <div class="welcome-section">
+        <h1>Bienvenue sur TeleMoto</h1>
+        <p class="subtitle">Application d'Assistance Technique Moto Racing avec Intégration IA</p>
+        
+        <div class="dashboard-description">
+            <p>Cette application vous permet d'optimiser les réglages de votre moto en fonction du pilote, du circuit et des conditions spécifiques rencontrées.</p>
+            <p>Utilisez l'intelligence artificielle pour obtenir des recommandations précises et améliorez vos performances sur piste.</p>
+        </div>
+    </div>
+    
+    <div class="dashboard-cards">
+        <div class="card dashboard-card">
+            <div class="card-icon"><i class="fas fa-user-helmet-safety"></i></div>
+            <h3>Pilotes</h3>
+            <p>Gérez les profils des pilotes avec leurs caractéristiques physiques et leur championnat.</p>
+            <a href="<?php echo url('pilotes/'); ?>" class="btn">Accéder</a>
+        </div>
+        
+        <div class="card dashboard-card">
+            <div class="card-icon"><i class="fas fa-motorcycle"></i></div>
+            <h3>Motos</h3>
+            <p>Configurez vos motos avec leurs réglages standards et équipements spécifiques.</p>
+            <a href="<?php echo url('motos/'); ?>" class="btn">Accéder</a>
+        </div>
+        
+        <div class="card dashboard-card">
+            <div class="card-icon"><i class="fas fa-road"></i></div>
+            <h3>Circuits</h3>
+            <p>Importez automatiquement les données des circuits via ChatGPT pour des analyses précises.</p>
+            <a href="<?php echo url('circuits/'); ?>" class="btn">Accéder</a>
+        </div>
+        
+        <div class="card dashboard-card highlight">
+            <div class="card-icon"><i class="fas fa-stopwatch"></i></div>
+            <h3>Sessions</h3>
+            <p>Créez et gérez vos sessions d'entraînement, qualifications et courses avec tous les réglages techniques.</p>
+            <a href="<?php echo url('sessions/'); ?>" class="btn btn-primary">Accéder</a>
+        </div>
+        
+        <div class="card dashboard-card">
+            <div class="card-icon"><i class="fas fa-robot"></i></div>
+            <h3>ChatGPT</h3>
+            <p>Obtenez des recommandations instantanées basées sur les données de vos sessions.</p>
+            <a href="<?php echo url('chatgpt/'); ?>" class="btn">Accéder</a>
+        </div>
+        
+        <div class="card dashboard-card">
+            <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+            <h3>Experts</h3>
+            <p>Consultez les experts techniques et contribuez à l'IA communautaire interne.</p>
+            <a href="<?php echo url('experts/'); ?>" class="btn">Accéder</a>
+        </div>
+    </div>
+</div>
 
+<?php
 // Inclure le pied de page
-include_once 'includes/footer.php';
+include_once __DIR__ . '/includes/footer.php';
+?>

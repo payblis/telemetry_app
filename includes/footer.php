@@ -1,15 +1,13 @@
+    </div>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-content">
+            <p>&copy; <?php echo date('Y'); ?> TeleMoto - Application d'Assistance Technique Moto Racing</p>
         </div>
-    </main>
-    
-    <footer>
-        <div class="footer-container">
-            <div class="copyright">
-                &copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?> - Application de télémétrie moto
-            </div>
-            <div class="version">
-                Version <?php echo APP_VERSION; ?>
-            </div>
-        </div>
-    </footer>
+    </div>
+    <script src="<?php echo $js_path; ?>main.js"></script>
+</footer>
 </body>
 </html>

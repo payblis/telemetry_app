@@ -1,18 +1,31 @@
 <?php
 /**
- * Configuration de la base de données
+ * Fichier de configuration de la base de données
  */
 
 // Paramètres de connexion à la base de données
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'test2');
-define('DB_USER', 'test2');
-define('DB_PASS', '7iKt2n2!4');
-define('DB_CHARSET', 'utf8mb4');
+$db_host = 'localhost';
+$db_name = 'test2';
+$db_user = 'test2';
+$db_pass = 'Ei58~99wt';
 
-// Options PDO
-define('DB_OPTIONS', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-]);
+/**
+ * Fonction pour établir la connexion à la base de données
+ * @return mysqli La connexion à la base de données
+ */
+function getDBConnection() {
+    global $db_host, $db_name, $db_user, $db_pass;
+    
+    // Créer la connexion
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    
+    // Vérifier la connexion
+    if ($conn->connect_error) {
+        die("Erreur de connexion à la base de données: " . $conn->connect_error);
+    }
+    
+    // Définir l'encodage des caractères
+    $conn->set_charset("utf8");
+    
+    return $conn;
+} 
