@@ -157,7 +157,7 @@ include_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="recommendation-actions mt-2">
                     <p>Cette recommandation vous a-t-elle été utile ?</p>
-                    <form method="POST" action="/telemoto/api/valider_recommandation.php" class="d-inline">
+                    <form method="POST" action="<?php echo url('api/valider_recommandation.php'); ?>" class="d-inline">
                         <input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
                         <input type="hidden" name="probleme" value="<?php echo htmlspecialchars($probleme); ?>">
                         <input type="hidden" name="solution" value="<?php echo htmlspecialchars($suggestion); ?>">

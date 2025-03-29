@@ -1,19 +1,19 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Vérifier la connexion à la base de données
 $conn = getDBConnection();
 
 // Vérifier si l'ID est fourni
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header("Location: /telemoto/pilotes/index.php?error=1");
+if (!isset($_GET['id'])) {
+    header("Location: " . url('pilotes/index.php?error=1'));
     exit;
 }
 
 $id = intval($_GET['id']);
 
-// Récupérer les données du pilote
+// Récupérer les informations du pilote
 $sql = "SELECT * FROM pilotes WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
@@ -21,7 +21,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: /telemoto/pilotes/index.php?error=2");
+    header("Location: " . url('pilotes/index.php?error=2'));
     exit;
 }
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($stmt->execute()) {
             // Redirection vers la liste des pilotes avec un message de succès
-            header("Location: /telemoto/pilotes/index.php?success=2");
+            header("Location: " . url('pilotes/index.php?success=2'));
             exit;
         } else {
             $message = "Erreur lors de la modification du pilote : " . $conn->error;
@@ -76,7 +76,7 @@ include_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="card">
-    <h2 class="card-title">Modifier un Pilote</h2>
+    <h2 class="card-title">Modifier le Pilote</h2>
     
     <?php if (!empty($message)): ?>
         <div class="alert alert-<?php echo $messageType; ?>">
@@ -111,7 +111,7 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
         
         <div class="form-actions">
-            <a href="/telemoto/pilotes/index.php" class="btn">Annuler</a>
+            <a href="<?php echo url('pilotes/index.php'); ?>" class="btn">Annuler</a>
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </div>
     </form>

@@ -1,6 +1,6 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../api/chatgpt.php';
 require_once __DIR__ . '/../api/communautaire.php';
 
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             
             // Redirection vers la page de détails de la session
-            header("Location: /telemoto/sessions/view.php?id=$session_id&success=1");
+            header("Location: " . url('sessions/view.php?id=' . $session_id . '&success=1'));
             exit;
         } else {
             $message = "Erreur lors de la création de la session : " . $conn->error;
@@ -109,6 +109,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $messageType = "danger";
     }
 }
+
+// Récupérer la liste des pilotes
+$pilotes = $conn->query("SELECT * FROM pilotes ORDER BY nom, prenom");
+
+// Récupérer la liste des motos
+$motos = $conn->query("SELECT * FROM motos ORDER BY marque, modele");
+
+// Récupérer la liste des circuits
+$circuits = $conn->query("SELECT * FROM circuits ORDER BY nom");
 
 // Inclure l'en-tête
 include_once __DIR__ . '/../includes/header.php';
@@ -159,20 +168,11 @@ include_once __DIR__ . '/../includes/header.php';
                         <label for="pilote_id">Pilote *</label>
                         <select id="pilote_id" name="pilote_id" required>
                             <option value="">Sélectionnez un pilote</option>
-                            <?php
-                            // Récupérer la liste des pilotes
-                            $sql = "SELECT id, nom, prenom FROM pilotes ORDER BY nom, prenom";
-                            $result = $conn->query($sql);
-                            
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_POST['pilote_id']) && $_POST['pilote_id'] == $row['id']) ? 'selected' : '';
-                                    echo '<option value="' . $row['id'] . '" ' . $selected . '>';
-                                    echo htmlspecialchars($row['prenom'] . ' ' . $row['nom']);
-                                    echo '</option>';
-                                }
-                            }
-                            ?>
+                            <?php while ($pilote = $pilotes->fetch_assoc()): ?>
+                                <option value="<?php echo $pilote['id']; ?>" <?php echo (isset($_POST['pilote_id']) && $_POST['pilote_id'] == $pilote['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($pilote['nom'] . ' ' . $pilote['prenom']); ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     
@@ -180,20 +180,11 @@ include_once __DIR__ . '/../includes/header.php';
                         <label for="moto_id">Moto *</label>
                         <select id="moto_id" name="moto_id" required>
                             <option value="">Sélectionnez une moto</option>
-                            <?php
-                            // Récupérer la liste des motos
-                            $sql = "SELECT id, marque, modele, type FROM motos ORDER BY marque, modele";
-                            $result = $conn->query($sql);
-                            
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_POST['moto_id']) && $_POST['moto_id'] == $row['id']) ? 'selected' : '';
-                                    echo '<option value="' . $row['id'] . '" ' . $selected . '>';
-                                    echo htmlspecialchars($row['marque'] . ' ' . $row['modele']) . ' (' . ($row['type'] === 'race' ? 'Course' : 'Origine') . ')';
-                                    echo '</option>';
-                                }
-                            }
-                            ?>
+                            <?php while ($moto = $motos->fetch_assoc()): ?>
+                                <option value="<?php echo $moto['id']; ?>" <?php echo (isset($_POST['moto_id']) && $_POST['moto_id'] == $moto['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($moto['marque'] . ' ' . $moto['modele']); ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     
@@ -201,20 +192,11 @@ include_once __DIR__ . '/../includes/header.php';
                         <label for="circuit_id">Circuit *</label>
                         <select id="circuit_id" name="circuit_id" required>
                             <option value="">Sélectionnez un circuit</option>
-                            <?php
-                            // Récupérer la liste des circuits
-                            $sql = "SELECT id, nom, pays FROM circuits ORDER BY nom";
-                            $result = $conn->query($sql);
-                            
-                            if ($result && $result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = (isset($_POST['circuit_id']) && $_POST['circuit_id'] == $row['id']) ? 'selected' : '';
-                                    echo '<option value="' . $row['id'] . '" ' . $selected . '>';
-                                    echo htmlspecialchars($row['nom']) . (!empty($row['pays']) ? ' (' . htmlspecialchars($row['pays']) . ')' : '');
-                                    echo '</option>';
-                                }
-                            }
-                            ?>
+                            <?php while ($circuit = $circuits->fetch_assoc()): ?>
+                                <option value="<?php echo $circuit['id']; ?>" <?php echo (isset($_POST['circuit_id']) && $_POST['circuit_id'] == $circuit['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($circuit['nom']); ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                 </div>
@@ -404,7 +386,7 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
         
         <div class="form-actions">
-            <a href="/telemoto/sessions/index.php" class="btn">Annuler</a>
+            <a href="<?php echo url('sessions/index.php'); ?>" class="btn">Annuler</a>
             <button type="submit" class="btn btn-primary">Créer la session</button>
         </div>
     </form>

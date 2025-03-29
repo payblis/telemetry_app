@@ -1,6 +1,6 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Vérifier la connexion à la base de données
 $conn = getDBConnection();
@@ -11,11 +11,11 @@ $messageType = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
-    $nom = trim($_POST['nom'] ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $taille = !empty($_POST['taille']) ? floatval($_POST['taille']) : null;
-    $poids = !empty($_POST['poids']) ? intval($_POST['poids']) : null;
-    $championnat = trim($_POST['championnat'] ?? '');
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
+    $taille = $_POST['taille'];
+    $poids = $_POST['poids'];
+    $championnat = $_POST['championnat'];
     
     // Validation des données
     $errors = [];
@@ -30,15 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Si pas d'erreurs, insérer dans la base de données
     if (empty($errors)) {
-        $sql = "INSERT INTO pilotes (nom, prenom, taille, poids, championnat) 
-                VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO pilotes (nom, prenom, taille, poids, championnat) VALUES (?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdis", $nom, $prenom, $taille, $poids, $championnat);
+        $stmt->bind_param("ssddss", $nom, $prenom, $taille, $poids, $championnat);
         
         if ($stmt->execute()) {
             // Redirection vers la liste des pilotes avec un message de succès
-            header("Location: /telemoto/pilotes/index.php?success=1");
+            header("Location: " . url('pilotes/index.php?success=1'));
             exit;
         } else {
             $message = "Erreur lors de l'ajout du pilote : " . $conn->error;
@@ -90,7 +89,7 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
         
         <div class="form-actions">
-            <a href="/telemoto/pilotes/index.php" class="btn">Annuler</a>
+            <a href="<?php echo url('pilotes/index.php'); ?>" class="btn">Annuler</a>
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </div>
     </form>

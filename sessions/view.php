@@ -1,6 +1,6 @@
 <?php
 // Inclure les fichiers de configuration
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../api/chatgpt.php';
 require_once __DIR__ . '/../api/communautaire.php';
 
@@ -8,31 +8,29 @@ require_once __DIR__ . '/../api/communautaire.php';
 $conn = getDBConnection();
 
 // Vérifier si l'ID est fourni
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header("Location: /telemoto/sessions/index.php?error=1");
+if (!isset($_GET['id'])) {
+    header("Location: " . url('sessions/index.php?error=1'));
     exit;
 }
 
 $id = intval($_GET['id']);
 
-// Récupérer les données de la session
-$sql = "SELECT s.*, 
-        p.nom as pilote_nom, p.prenom as pilote_prenom, p.taille as pilote_taille, p.poids as pilote_poids,
+// Récupérer les informations de la session
+$sql = "SELECT s.*, p.nom as pilote_nom, p.prenom as pilote_prenom, p.taille as pilote_taille, p.poids as pilote_poids,
         m.marque as moto_marque, m.modele as moto_modele, m.cylindree as moto_cylindree, m.type as moto_type, m.reglages_standards,
         c.nom as circuit_nom, c.pays as circuit_pays, c.longueur as circuit_longueur, c.details_virages
         FROM sessions s
-        JOIN pilotes p ON s.pilote_id = p.id
-        JOIN motos m ON s.moto_id = m.id
-        JOIN circuits c ON s.circuit_id = c.id
+        LEFT JOIN pilotes p ON s.pilote_id = p.id
+        LEFT JOIN motos m ON s.moto_id = m.id
+        LEFT JOIN circuits c ON s.circuit_id = c.id
         WHERE s.id = ?";
-
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: /telemoto/sessions/index.php?error=2");
+    header("Location: " . url('sessions/index.php?error=2'));
     exit;
 }
 
@@ -85,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt->bind_param("issd", $id, $tour_numero, $temps, $temps_secondes);
         
         if ($stmt->execute()) {
-            header("Location: /telemoto/sessions/view.php?id=$id&success=1");
+            header("Location: " . url('sessions/view.php?id=' . $id . '&success=1'));
             exit;
         }
     }
@@ -101,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt->bind_param("is", $id, $remarque);
         
         if ($stmt->execute()) {
-            header("Location: /telemoto/sessions/view.php?id=$id&success=2");
+            header("Location: " . url('sessions/view.php?id=' . $id . '&success=2'));
             exit;
         }
     }
@@ -115,10 +113,10 @@ include_once __DIR__ . '/../includes/header.php';
     <h2 class="card-title">Détails de la Session</h2>
     
     <div class="mb-3">
-        <a href="/telemoto/sessions/index.php" class="btn">
+        <a href="<?php echo url('sessions/index.php'); ?>" class="btn">
             <i class="fas fa-arrow-left"></i> Retour à la liste
         </a>
-        <a href="/telemoto/sessions/edit.php?id=<?php echo $session['id']; ?>" class="btn btn-primary">
+        <a href="<?php echo url('sessions/edit.php?id=' . $session['id']); ?>" class="btn btn-primary">
             <i class="fas fa-edit"></i> Modifier
         </a>
     </div>
@@ -541,10 +539,10 @@ include_once __DIR__ . '/../includes/header.php';
                                         <?php echo nl2br(htmlspecialchars($remarque['remarque'])); ?>
                                     </div>
                                     <div class="remarque-actions">
-                                        <a href="/telemoto/chatgpt/index.php?session_id=<?php echo $id; ?>&probleme=<?php echo urlencode($remarque['remarque']); ?>" class="btn btn-sm btn-primary">
+                                        <a href="<?php echo url('chatgpt/index.php?session_id=' . $id . '&probleme=' . urlencode($remarque['remarque'])); ?>" class="btn btn-sm btn-primary">
                                             <i class="fas fa-robot"></i> Demander conseil à l'IA
                                         </a>
-                                        <a href="/telemoto/experts/poser_question.php?session_id=<?php echo $id; ?>&question=<?php echo urlencode($remarque['remarque']); ?>" class="btn btn-sm">
+                                        <a href="<?php echo url('experts/poser_question.php?session_id=' . $id . '&question=' . urlencode($remarque['remarque'])); ?>" class="btn btn-sm">
                                             <i class="fas fa-user-tie"></i> Consulter un expert
                                         </a>
                                     </div>
@@ -565,10 +563,10 @@ include_once __DIR__ . '/../includes/header.php';
                     <h3>Recommandations IA</h3>
                     
                     <div class="ia-actions mb-3">
-                        <a href="/telemoto/chatgpt/index.php?session_id=<?php echo $id; ?>" class="btn btn-primary">
+                        <a href="<?php echo url('chatgpt/index.php?session_id=' . $id); ?>" class="btn btn-primary">
                             <i class="fas fa-robot"></i> Demander une nouvelle recommandation
                         </a>
-                        <a href="/telemoto/experts/poser_question.php?session_id=<?php echo $id; ?>" class="btn">
+                        <a href="<?php echo url('experts/poser_question.php?session_id=' . $id); ?>" class="btn">
                             <i class="fas fa-user-tie"></i> Poser une question aux experts
                         </a>
                     </div>
