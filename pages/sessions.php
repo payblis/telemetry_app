@@ -48,6 +48,7 @@
                             <th>Circuit</th>
                             <th>Pilote</th>
                             <th>Moto</th>
+                            <th>Conditions</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -67,9 +68,10 @@
                                     }
                                 ?>
                             </td>
-                            <td><?php echo $session['circuit_name']; ?></td>
-                            <td><?php echo $session['pilot_name']; ?></td>
-                            <td><?php echo $session['moto_brand'] . ' ' . $session['moto_model']; ?></td>
+                            <td><?php echo htmlspecialchars($session['circuit_name']); ?></td>
+                            <td><?php echo htmlspecialchars($session['pilot_name']); ?></td>
+                            <td><?php echo htmlspecialchars($session['moto_brand'] . ' ' . $session['moto_model']); ?></td>
+                            <td><?php echo htmlspecialchars($session['weather'] ?? ''); ?></td>
                             <td>
                                 <a href="index.php?page=session_details&id=<?php echo $session['id']; ?>" class="btn btn-secondary">Détails</a>
                                 <a href="index.php?page=session_edit&id=<?php echo $session['id']; ?>" class="btn btn-secondary">Modifier</a>

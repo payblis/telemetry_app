@@ -63,7 +63,7 @@ try {
                         <td><?php echo htmlspecialchars($session['pilot_name']); ?></td>
                         <td><?php echo htmlspecialchars($session['moto_brand'] . ' ' . $session['moto_model']); ?></td>
                         <td><?php echo htmlspecialchars($session['circuit_name']); ?></td>
-                        <td><?php echo htmlspecialchars($session['weather_conditions']); ?></td>
+                        <td><?php echo htmlspecialchars($session['weather'] ?? ''); ?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="index.php?page=session_edit&id=<?php echo $session['id']; ?>" 
