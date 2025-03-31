@@ -1,0 +1,302 @@
+/* Éléments visuels de type racing pour TeleMoto
+ * Ce fichier contient des styles spécifiques pour améliorer l'interface racing
+ * avec des jauges, graphiques et tableaux de bord cohérents
+ */
+
+/* Jauges et indicateurs */
+.gauge-container {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    margin: 0 auto 20px;
+    overflow: hidden;
+}
+
+.gauge {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #1a1f2b, #242a38);
+    border-radius: 100px 100px 0 0;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--light-gray);
+}
+
+.gauge-value {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, var(--primary-color), #0090e0);
+    transition: height 0.5s ease-out;
+}
+
+.gauge-marker {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.gauge-label {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.gauge-value-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+/* Tableau de bord */
+.dashboard-panel {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--light-gray);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+}
+
+.dashboard-panel-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.dashboard-panel-title i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.dashboard-panel-title h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Graphiques et visualisations */
+.chart-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--light-gray);
+    position: relative;
+}
+
+.chart-title {
+    font-size: 1rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Indicateurs LED */
+.led-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.led-green {
+    background-color: var(--success-color);
+    box-shadow: 0 0 5px var(--success-color);
+}
+
+.led-yellow {
+    background-color: var(--warning-color);
+    box-shadow: 0 0 5px var(--warning-color);
+}
+
+.led-red {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 5px var(--danger-color);
+}
+
+/* Contrôles de réglage */
+.setting-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.setting-label {
+    flex: 1;
+    font-weight: bold;
+}
+
+.setting-value {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.setting-slider {
+    flex: 2;
+    height: 6px;
+    background-color: var(--light-gray);
+    border-radius: 3px;
+    position: relative;
+}
+
+.setting-slider-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+.setting-slider-handle {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Tableau de chronos */
+.lap-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.lap-table th {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.lap-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.lap-table tr:hover {
+    background-color: rgba(0, 168, 255, 0.1);
+}
+
+.lap-best {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.lap-worst {
+    color: var(--danger-color);
+}
+
+/* Badges et statuts */
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background-color: rgba(0, 200, 83, 0.2);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.status-inactive {
+    background-color: rgba(255, 61, 0, 0.2);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.status-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
+}
+
+/* Animation pour les éléments interactifs */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 168, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 168, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 168, 255, 0);
+    }
+}
+
+.interactive-element {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive design pour les éléments racing */
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gauge-container {
+        width: 150px;
+        height: 75px;
+    }
+    
+    .setting-control {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .setting-slider {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+}
