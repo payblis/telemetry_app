@@ -36,6 +36,12 @@ if (preg_match('/\.(css|js|jpg|jpeg|png|gif|ico|svg)$/i', $requestUri)) {
     return false;
 }
 
+// Rediriger /public/ vers la racine
+if ($requestUri === '/public/') {
+    header('Location: /');
+    exit;
+}
+
 try {
     // Charger la configuration
     logError("PUBLIC INDEX.PHP - Chargement de la configuration");
