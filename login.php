@@ -1,1 +1,0 @@
-<?php /* Login form */ ?>

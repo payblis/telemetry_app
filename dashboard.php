@@ -1,1 +1,0 @@
-<?php include 'includes/header.php'; echo '<h2>Bienvenue sur votre tableau de bord</h2>'; include 'includes/footer.php'; ?>
