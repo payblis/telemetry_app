@@ -20,10 +20,23 @@ if (!isset($_SESSION['user_id'])) {
     <style>
         body {
             background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+        }
+        .container-fluid {
+            padding: 0;
+            display: flex;
+            flex: 1;
+        }
+        .row {
+            flex: 1;
+            margin: 0;
         }
         .sidebar {
             background-color: #343a40;
             min-height: 100vh;
+            width: 250px;
+            position: fixed;
             padding: 20px;
         }
         .sidebar a {
@@ -37,17 +50,23 @@ if (!isset($_SESSION['user_id'])) {
             background-color: #495057;
         }
         .main-content {
+            margin-left: 250px;
             padding: 20px;
+            flex: 1;
+            width: calc(100% - 250px);
         }
         .card {
             margin-bottom: 20px;
+        }
+        .table-responsive {
+            overflow-x: auto;
         }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 sidebar">
+            <div class="sidebar">
                 <h4 class="text-white mb-4">Telemetry App</h4>
                 <a href="../dashboard.php">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -71,7 +90,7 @@ if (!isset($_SESSION['user_id'])) {
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </div>
-            <div class="col-md-10 main-content">
+            <div class="main-content">
                 <div class="content-wrapper">
                     <!-- Le contenu de la page sera inséré ici -->
                 </div>
