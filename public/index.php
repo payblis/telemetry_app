@@ -33,13 +33,8 @@ logError("PUBLIC INDEX.PHP - ROOT_PATH", ROOT_PATH);
 $requestUri = $_SERVER['REQUEST_URI'];
 if (preg_match('/\.(css|js|jpg|jpeg|png|gif|ico|svg)$/i', $requestUri)) {
     // Si c'est un fichier statique, laisser Apache le gérer
+    logError("PUBLIC INDEX.PHP - Fichier statique détecté, pas de traitement");
     return false;
-}
-
-// Rediriger /public/ vers la racine
-if ($requestUri === '/public/') {
-    header('Location: /');
-    exit;
 }
 
 try {

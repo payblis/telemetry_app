@@ -29,6 +29,13 @@ if (strpos($_SERVER['REQUEST_URI'], '/public/') === 0) {
     return false;
 }
 
+// Vérifier si c'est une requête pour un fichier statique
+if (preg_match('/\.(css|js|jpg|jpeg|png|gif|ico|svg)$/i', $_SERVER['REQUEST_URI'])) {
+    // Si c'est un fichier statique, laisser Apache le gérer
+    logError("ROOT INDEX.PHP - Fichier statique détecté, pas de redirection");
+    return false;
+}
+
 // Rediriger vers le dossier public
 logError("ROOT INDEX.PHP - Redirection vers public/");
 header('Location: /public/');
