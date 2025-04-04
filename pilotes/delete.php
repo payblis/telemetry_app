@@ -29,32 +29,37 @@ try {
 }
 ?>
 
-<div class="card">
-    <div class="card-header">
-        <h5 class="card-title">Delete Pilot</h5>
-        <a href="list.php" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i>
-            Back
-        </a>
-    </div>
-    <div class="card-body">
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php else: ?>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                Are you sure you want to delete this pilot? This action cannot be undone.
-            </div>
-            <form method="POST" action="delete.php?id=<?php echo $_GET['id']; ?>">
-                <div class="text-end">
-                    <a href="list.php" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </button>
+<div class="content-wrapper">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Delete Pilot</h5>
+            <a href="list.php" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+        </div>
+        <div class="card-body">
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <?php echo $error; ?>
                 </div>
-            </form>
-        <?php endif; ?>
+            <?php else: ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Are you sure you want to delete this pilot? This action cannot be undone.
+                </div>
+                <form method="POST" action="delete.php?id=<?php echo $_GET['id']; ?>">
+                    <div class="text-end">
+                        <a href="list.php" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
