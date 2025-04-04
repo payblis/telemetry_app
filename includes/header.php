@@ -10,182 +10,214 @@ checkAuth();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télémétrie Moto - Back Office</title>
+    <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>Télémétrie Moto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #3f6ad8;
+            --primary-light: #e8f0fe;
             --secondary: #6c757d;
-            --success: #3ac47d;
-            --info: #16aaff;
-            --warning: #f7b924;
-            --danger: #d92550;
-            --light: #f8f9fa;
-            --dark: #343a40;
+            --success: #2e7d32;
+            --danger: #d32f2f;
+            --warning: #ed6c02;
+            --info: #0288d1;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f1f4f6;
-            margin: 0;
-            padding: 0;
-        }
-
-        .app-container {
-            display: flex;
             min-height: 100vh;
+            display: flex;
+            background-color: #f5f7fb;
         }
 
-        /* Sidebar */
         .sidebar {
-            width: 250px;
-            background: #fff;
-            box-shadow: 0 0 1rem rgba(0,0,0,.15);
+            width: 260px;
+            background-color: #fff;
+            box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
             position: fixed;
+            top: 0;
+            left: 0;
             height: 100vh;
             z-index: 1000;
+            padding-top: 20px;
         }
 
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,.1);
-        }
-
-        .sidebar-menu {
-            padding: 1rem 0;
-        }
-
-        .sidebar-menu-item {
-            padding: .75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            color: #6c757d;
-            text-decoration: none;
-            transition: all .2s;
-        }
-
-        .sidebar-menu-item:hover {
-            background: rgba(63,106,216,.1);
-            color: var(--primary);
-        }
-
-        .sidebar-menu-item i {
-            margin-right: 1rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 250px;
-            padding: 1.5rem;
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Top Bar */
         .top-bar {
-            background: #fff;
-            padding: 1rem 1.5rem;
-            border-radius: .5rem;
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
             margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background-color: transparent;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 1rem rgba(0,0,0,.15);
         }
 
-        .page-title {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--dark);
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .nav-link {
+            color: #6c757d;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
         }
 
         .user-menu {
             display: flex;
             align-items: center;
+            gap: 1rem;
         }
 
-        .user-menu img {
+        .user-menu .dropdown-toggle::after {
+            display: none;
+        }
+
+        .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            margin-right: 1rem;
-        }
-
-        /* Cards */
-        .card {
-            background: #fff;
-            border-radius: .5rem;
-            box-shadow: 0 0 1rem rgba(0,0,0,.15);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-header {
+            background-color: var(--primary-light);
+            color: var(--primary);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            justify-content: center;
+            font-weight: 600;
         }
 
-        .card-title {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--dark);
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: #6c757d;
+            border-top: none;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Télémétrie Moto</h2>
-            </div>
-            <nav class="sidebar-menu">
-                <a href="../index.php" class="sidebar-menu-item">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
-                <a href="../pilotes/" class="sidebar-menu-item">
-                    <i class="fas fa-user"></i>
-                    Pilotes
-                </a>
-                <a href="../motos/" class="sidebar-menu-item">
-                    <i class="fas fa-motorcycle"></i>
-                    Motos
-                </a>
-                <a href="../circuits/" class="sidebar-menu-item">
-                    <i class="fas fa-route"></i>
-                    Circuits
-                </a>
-                <a href="../sessions/" class="sidebar-menu-item">
-                    <i class="fas fa-clock"></i>
-                    Sessions
-                </a>
-                <?php if (isAdmin() || isExpert()): ?>
-                <a href="../admin/" class="sidebar-menu-item">
-                    <i class="fas fa-cog"></i>
-                    Administration
-                </a>
-                <?php endif; ?>
-            </nav>
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h4 class="text-primary">Télémétrie Moto</h4>
         </div>
+        <nav>
+            <a href="../index.php" class="nav-link">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="../pilotes/index.php" class="nav-link">
+                <i class="fas fa-user"></i>
+                Pilotes
+            </a>
+            <a href="../motos/index.php" class="nav-link">
+                <i class="fas fa-motorcycle"></i>
+                Motos
+            </a>
+            <a href="../circuits/index.php" class="nav-link">
+                <i class="fas fa-route"></i>
+                Circuits
+            </a>
+            <a href="../sessions/index.php" class="nav-link">
+                <i class="fas fa-clock"></i>
+                Sessions
+            </a>
+            <?php if ($_SESSION['role'] === 'admin'): ?>
+            <a href="../admin/index.php" class="nav-link">
+                <i class="fas fa-cog"></i>
+                Administration
+            </a>
+            <?php endif; ?>
+        </nav>
+    </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <h1 class="page-title"><?php echo $page_title ?? 'Dashboard'; ?></h1>
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><?php echo $page_title ?? 'Dashboard'; ?></h5>
                 <div class="user-menu">
-                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_email']); ?>" alt="Avatar">
-                    <div>
-                        <div class="user-name"><?php echo htmlspecialchars($_SESSION['user_email']); ?></div>
-                        <a href="../logout.php" class="logout-link">Déconnexion</a>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="avatar">
+                                <?php echo strtoupper(substr($_SESSION['email'], 0, 1)); ?>
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="../profile.php">Profil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../logout.php">Déconnexion</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Le contenu de la page sera inséré ici -->
         </div>
     </div>
 </body>
