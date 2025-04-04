@@ -29,6 +29,13 @@ logError("PUBLIC INDEX.PHP - Request URI", $_SERVER['REQUEST_URI']);
 define('ROOT_PATH', dirname(__DIR__));
 logError("PUBLIC INDEX.PHP - ROOT_PATH", ROOT_PATH);
 
+// Vérifier si la requête est pour un fichier statique
+$requestUri = $_SERVER['REQUEST_URI'];
+if (preg_match('/\.(css|js|jpg|jpeg|png|gif|ico|svg)$/i', $requestUri)) {
+    // Si c'est un fichier statique, laisser Apache le gérer
+    return false;
+}
+
 try {
     // Charger la configuration
     logError("PUBLIC INDEX.PHP - Chargement de la configuration");

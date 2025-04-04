@@ -4,17 +4,6 @@ RewriteEngine On
 # Définir le répertoire de base pour les règles de réécriture
 RewriteBase /
 
-# Log de la requête
-RewriteCond %{REQUEST_URI} ^/public/
-RewriteRule .* - [E=REQUEST_URI:%{REQUEST_URI},E=SCRIPT_FILENAME:%{SCRIPT_FILENAME}]
-
-# Redirection de /public/ vers la racine
-RewriteRule ^public/$ / [R=301,L]
-
-# Gérer les assets
-RewriteCond %{REQUEST_URI} ^/assets/
-RewriteRule ^assets/(.*)$ public/assets/$1 [L]
-
 # Ne pas appliquer les règles aux fichiers et répertoires existants
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
