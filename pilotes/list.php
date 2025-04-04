@@ -14,21 +14,26 @@ try {
 }
 ?>
 
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Pilots List</h5>
-        <a href="add.php" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add Pilot
-        </a>
-    </div>
-    <div class="card-body">
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php endif; ?>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">Pilots List</h5>
+    <a href="add.php" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Pilot
+    </a>
+</div>
 
-        <?php if (empty($pilotes)): ?>
+<?php if (isset($error)): ?>
+    <div class="alert alert-danger"><?php echo $error; ?></div>
+<?php endif; ?>
+
+<?php if (empty($pilotes)): ?>
+    <div class="card">
+        <div class="card-body">
             <p>No pilots registered yet.</p>
-        <?php else: ?>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="card">
+        <div class="card-body">
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -69,8 +74,8 @@ try {
                     </tbody>
                 </table>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
-</div>
+<?php endif; ?>
 
 <?php require_once '../includes/footer.php'; ?>
