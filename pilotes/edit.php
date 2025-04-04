@@ -114,11 +114,11 @@ try {
                         <label for="niveau" class="form-label">Level *</label>
                         <select class="form-select" id="niveau" name="niveau" required>
                             <option value="">Select a level</option>
-                            <option value="Débutant" <?php echo $pilote['niveau'] === 'Débutant' ? 'selected' : ''; ?>>Beginner</option>
-                            <option value="Intermédiaire" <?php echo $pilote['niveau'] === 'Intermédiaire' ? 'selected' : ''; ?>>Intermediate</option>
-                            <option value="Avancé" <?php echo $pilote['niveau'] === 'Avancé' ? 'selected' : ''; ?>>Advanced</option>
+                            <option value="Beginner" <?php echo $pilote['niveau'] === 'Beginner' ? 'selected' : ''; ?>>Beginner</option>
+                            <option value="Intermediate" <?php echo $pilote['niveau'] === 'Intermediate' ? 'selected' : ''; ?>>Intermediate</option>
+                            <option value="Advanced" <?php echo $pilote['niveau'] === 'Advanced' ? 'selected' : ''; ?>>Advanced</option>
                             <option value="Expert" <?php echo $pilote['niveau'] === 'Expert' ? 'selected' : ''; ?>>Expert</option>
-                            <option value="Professionnel" <?php echo $pilote['niveau'] === 'Professionnel' ? 'selected' : ''; ?>>Professional</option>
+                            <option value="Professional" <?php echo $pilote['niveau'] === 'Professional' ? 'selected' : ''; ?>>Professional</option>
                         </select>
                         <div class="invalid-feedback">Please select a level</div>
                     </div>
