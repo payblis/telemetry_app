@@ -3,8 +3,15 @@
  * Configuration principale de l'application SaaS de Télémétrie Moto
  */
 
+// Activer l'affichage des erreurs
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+error_log("CONFIG.PHP - Démarrage de la configuration");
+
 // Mode de débogage (à désactiver en production)
 define('DEBUG_MODE', true);
+error_log("CONFIG.PHP - DEBUG_MODE: " . (DEBUG_MODE ? 'true' : 'false'));
 
 // Configuration de la base de données
 define('DB_HOST', 'localhost');
@@ -12,12 +19,17 @@ define('DB_NAME', 'test2');
 define('DB_USER', 'test2');
 define('DB_PASS', '3S890zqy#');
 define('DB_CHARSET', 'utf8mb4');
+error_log("CONFIG.PHP - Configuration DB: " . DB_HOST . " - " . DB_NAME);
 
 // Configuration des chemins
 define('BASE_URL', 'https://test2.payblis.com');
-define('ASSETS_URL', BASE_URL . '/assets');
+define('ASSETS_URL', BASE_URL . '/public/assets');
 define('UPLOADS_PATH', ROOT_PATH . '/public/uploads');
 define('VIEWS_PATH', ROOT_PATH . '/resources/views');
+error_log("CONFIG.PHP - BASE_URL: " . BASE_URL);
+error_log("CONFIG.PHP - ASSETS_URL: " . ASSETS_URL);
+error_log("CONFIG.PHP - UPLOADS_PATH: " . UPLOADS_PATH);
+error_log("CONFIG.PHP - VIEWS_PATH: " . VIEWS_PATH);
 
 // Configuration de l'application
 define('APP_NAME', 'Télémétrie Moto SaaS');
@@ -111,3 +123,5 @@ function config($key, $default = null) {
     
     return $value;
 }
+
+error_log("CONFIG.PHP - Configuration terminée");

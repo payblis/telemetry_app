@@ -1,15 +1,27 @@
 # Activation du moteur de réécriture
 RewriteEngine On
 
+# Log des requêtes
+RewriteCond %{REQUEST_URI} !^/public/assets/
+RewriteRule .* - [E=LOG:1]
+RewriteCond %{ENV:LOG} 1
+RewriteRule .* - [E=REQUEST_URI:%{REQUEST_URI}]
+RewriteCond %{ENV:LOG} 1
+RewriteRule .* - [E=REQUEST_METHOD:%{REQUEST_METHOD}]
+RewriteCond %{ENV:LOG} 1
+RewriteRule .* - [E=SCRIPT_FILENAME:%{SCRIPT_FILENAME}]
+RewriteCond %{ENV:LOG} 1
+RewriteRule .* - [E=REDIRECT_STATUS:%{REDIRECT_STATUS}]
+
 # Définir le répertoire de base pour les règles de réécriture
-RewriteBase /public/
+RewriteBase /
 
 # Ne pas appliquer les règles aux fichiers et répertoires existants
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # Rediriger toutes les requêtes vers index.php
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteRule ^(.*)$ index.php [QSA,L,E=LOG:1]
 
 # Protection des répertoires
 Options -Indexes
@@ -46,3 +58,7 @@ AddDefaultCharset UTF-8
     Order Allow,Deny
     Allow from all
 </FilesMatch>
+
+# Log des erreurs
+ErrorLog /var/log/apache2/telemetry_error.log
+CustomLog /var/log/apache2/telemetry_access.log combined
