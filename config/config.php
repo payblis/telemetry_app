@@ -8,9 +8,9 @@ define('DEBUG_MODE', true);
 
 // Configuration de la base de données
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'telemetrie_moto');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'test2');
+define('DB_USER', 'test2');
+define('DB_PASS', '3S890zqy#');
 define('DB_CHARSET', 'utf8mb4');
 
 // Configuration des chemins
