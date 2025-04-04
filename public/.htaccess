@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Définir le répertoire de base pour les règles de réécriture
-RewriteBase /
+RewriteBase /public/
 
 # Ne pas appliquer les règles aux fichiers et répertoires existants
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -39,4 +39,10 @@ AddDefaultCharset UTF-8
 <FilesMatch "^\.ht|config\.php$|autoload\.php$">
     Order allow,deny
     Deny from all
+</FilesMatch>
+
+# Autoriser l'accès aux fichiers statiques
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg)$">
+    Order Allow,Deny
+    Allow from all
 </FilesMatch>
