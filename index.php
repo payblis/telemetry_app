@@ -1,32 +1,35 @@
 <?php
 /**
- * Fichier index.php à la racine du projet
+ * Point d'entrée principal de l'application SaaS de Télémétrie Moto
  * 
- * Ce fichier redirige toutes les requêtes vers le dossier public
- * pour une meilleure sécurité de l'application
+ * Ce fichier sert de point d'entrée pour toutes les requêtes
+ * et redirige vers le dossier public
  */
 
 // Activer l'affichage des erreurs
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Log de la requête
-error_log("ROOT INDEX.PHP - Requête reçue: " . $_SERVER['REQUEST_URI']);
+// Fonction de log détaillée
+function logError($message, $data = null) {
+    $logMessage = date('Y-m-d H:i:s') . " - " . $message;
+    if ($data !== null) {
+        $logMessage .= " - " . print_r($data, true);
+    }
+    error_log($logMessage);
+}
 
-// Vérifier si c'est une requête pour les assets
-if (strpos($_SERVER['REQUEST_URI'], '/assets/') === 0) {
-    error_log("ROOT INDEX.PHP - Requête d'asset détectée");
-    // Laisser Apache gérer la requête
+// Log de la requête
+logError("ROOT INDEX.PHP - Requête reçue: " . $_SERVER['REQUEST_URI']);
+
+// Vérifier si la requête est déjà dans le dossier public
+if (strpos($_SERVER['REQUEST_URI'], '/public/') === 0) {
+    // Si c'est déjà dans public, ne pas rediriger
+    logError("ROOT INDEX.PHP - Requête déjà dans public, pas de redirection");
     return false;
 }
 
-// Vérifier si nous ne sommes pas déjà dans le dossier public
-if (strpos($_SERVER['REQUEST_URI'], '/public/') === false) {
-    error_log("ROOT INDEX.PHP - Redirection vers public/");
-    header('Location: /public/');
-    exit;
-} else {
-    error_log("ROOT INDEX.PHP - Déjà dans public/, redirection vers la racine");
-    header('Location: /');
-    exit;
-}
+// Rediriger vers le dossier public
+logError("ROOT INDEX.PHP - Redirection vers public/");
+header('Location: /public/');
+exit;
