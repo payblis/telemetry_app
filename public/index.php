@@ -10,52 +10,74 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Fonction de log détaillée
+function logError($message, $data = null) {
+    $logMessage = date('Y-m-d H:i:s') . " - " . $message;
+    if ($data !== null) {
+        $logMessage .= " - " . print_r($data, true);
+    }
+    error_log($logMessage);
+}
+
 // Log de la requête
-error_log("PUBLIC INDEX.PHP - Requête reçue: " . $_SERVER['REQUEST_URI']);
-error_log("PUBLIC INDEX.PHP - Méthode: " . $_SERVER['REQUEST_METHOD']);
-error_log("PUBLIC INDEX.PHP - Script: " . $_SERVER['SCRIPT_NAME']);
+logError("PUBLIC INDEX.PHP - Requête reçue", $_SERVER);
 
 // Définir le chemin racine de l'application
 define('ROOT_PATH', dirname(__DIR__));
-error_log("PUBLIC INDEX.PHP - ROOT_PATH: " . ROOT_PATH);
+logError("PUBLIC INDEX.PHP - ROOT_PATH", ROOT_PATH);
 
 try {
     // Charger la configuration
-    error_log("PUBLIC INDEX.PHP - Chargement de la configuration");
+    logError("PUBLIC INDEX.PHP - Chargement de la configuration");
+    if (!file_exists(ROOT_PATH . '/config/config.php')) {
+        throw new Exception("Fichier de configuration non trouvé: " . ROOT_PATH . '/config/config.php');
+    }
     require_once ROOT_PATH . '/config/config.php';
-    error_log("PUBLIC INDEX.PHP - Configuration chargée");
+    logError("PUBLIC INDEX.PHP - Configuration chargée");
 
     // Charger l'autoloader
-    error_log("PUBLIC INDEX.PHP - Chargement de l'autoloader");
+    logError("PUBLIC INDEX.PHP - Chargement de l'autoloader");
+    if (!file_exists(ROOT_PATH . '/config/autoload.php')) {
+        throw new Exception("Fichier autoloader non trouvé: " . ROOT_PATH . '/config/autoload.php');
+    }
     require_once ROOT_PATH . '/config/autoload.php';
-    error_log("PUBLIC INDEX.PHP - Autoloader chargé");
+    logError("PUBLIC INDEX.PHP - Autoloader chargé");
 
     // Initialiser la session
-    error_log("PUBLIC INDEX.PHP - Initialisation de la session");
+    logError("PUBLIC INDEX.PHP - Initialisation de la session");
     session_start();
-    error_log("PUBLIC INDEX.PHP - Session démarrée");
+    logError("PUBLIC INDEX.PHP - Session démarrée");
 
     // Charger le routeur
-    error_log("PUBLIC INDEX.PHP - Chargement du routeur");
+    logError("PUBLIC INDEX.PHP - Chargement du routeur");
+    if (!file_exists(ROOT_PATH . '/config/router.php')) {
+        throw new Exception("Fichier routeur non trouvé: " . ROOT_PATH . '/config/router.php');
+    }
     require_once ROOT_PATH . '/config/router.php';
-    error_log("PUBLIC INDEX.PHP - Routeur chargé");
+    logError("PUBLIC INDEX.PHP - Routeur chargé");
 
     // Traiter la requête
-    error_log("PUBLIC INDEX.PHP - Création de l'instance du routeur");
+    logError("PUBLIC INDEX.PHP - Création de l'instance du routeur");
     $router = new Router();
-    error_log("PUBLIC INDEX.PHP - Démarrage du dispatch");
+    logError("PUBLIC INDEX.PHP - Démarrage du dispatch");
     $router->dispatch();
-    error_log("PUBLIC INDEX.PHP - Dispatch terminé");
+    logError("PUBLIC INDEX.PHP - Dispatch terminé");
 
 } catch (Exception $e) {
     // Log de l'erreur
-    error_log("PUBLIC INDEX.PHP - ERREUR: " . $e->getMessage());
-    error_log("PUBLIC INDEX.PHP - TRACE: " . $e->getTraceAsString());
+    logError("PUBLIC INDEX.PHP - ERREUR FATALE", [
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString()
+    ]);
     
     // Gérer les erreurs
     if (DEBUG_MODE) {
         echo '<h1>Erreur</h1>';
         echo '<p>' . $e->getMessage() . '</p>';
+        echo '<p>Fichier: ' . $e->getFile() . '</p>';
+        echo '<p>Ligne: ' . $e->getLine() . '</p>';
         echo '<pre>' . $e->getTraceAsString() . '</pre>';
     } else {
         // En production, afficher un message générique
