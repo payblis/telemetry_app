@@ -1,1 +1,0 @@
-<?php include '../includes/header.php'; echo '<h2>Gestion des experts</h2>'; include '../includes/footer.php'; ?>
