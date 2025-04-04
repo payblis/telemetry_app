@@ -13,6 +13,13 @@ ini_set('display_errors', 1);
 // Log de la requête
 error_log("ROOT INDEX.PHP - Requête reçue: " . $_SERVER['REQUEST_URI']);
 
+// Vérifier si c'est une requête pour les assets
+if (strpos($_SERVER['REQUEST_URI'], '/assets/') === 0) {
+    error_log("ROOT INDEX.PHP - Requête d'asset détectée");
+    // Laisser Apache gérer la requête
+    return false;
+}
+
 // Vérifier si nous ne sommes pas déjà dans le dossier public
 if (strpos($_SERVER['REQUEST_URI'], '/public/') === false) {
     error_log("ROOT INDEX.PHP - Redirection vers public/");

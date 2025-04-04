@@ -4,6 +4,10 @@ RewriteEngine On
 # Définir le répertoire de base pour les règles de réécriture
 RewriteBase /
 
+# Gérer les assets
+RewriteCond %{REQUEST_URI} ^/assets/
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
 # Ne pas appliquer les règles aux fichiers et répertoires existants
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
