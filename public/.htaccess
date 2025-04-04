@@ -4,6 +4,9 @@ RewriteEngine On
 # Définir le répertoire de base pour les règles de réécriture
 RewriteBase /
 
+# Redirection de /public/ vers la racine
+RewriteRule ^public/$ / [R=301,L]
+
 # Gérer les assets
 RewriteCond %{REQUEST_URI} ^/assets/
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]

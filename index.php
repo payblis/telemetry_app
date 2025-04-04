@@ -26,5 +26,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/public/') === false) {
     header('Location: /public/');
     exit;
 } else {
-    error_log("ROOT INDEX.PHP - Déjà dans public/, pas de redirection nécessaire");
+    error_log("ROOT INDEX.PHP - Déjà dans public/, redirection vers la racine");
+    header('Location: /');
+    exit;
 }
