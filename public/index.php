@@ -21,6 +21,9 @@ function logError($message, $data = null) {
 
 // Log de la requête
 logError("PUBLIC INDEX.PHP - Requête reçue", $_SERVER);
+logError("PUBLIC INDEX.PHP - Document Root", $_SERVER['DOCUMENT_ROOT']);
+logError("PUBLIC INDEX.PHP - Script Filename", $_SERVER['SCRIPT_FILENAME']);
+logError("PUBLIC INDEX.PHP - Request URI", $_SERVER['REQUEST_URI']);
 
 // Définir le chemin racine de l'application
 define('ROOT_PATH', dirname(__DIR__));

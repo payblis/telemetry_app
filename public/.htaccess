@@ -1,8 +1,18 @@
 # Activation du moteur de réécriture
 RewriteEngine On
 
+# Activer les logs de débogage
+RewriteLog "/var/log/apache2/rewrite.log"
+RewriteLogLevel 3
+
 # Définir le répertoire de base pour les règles de réécriture
 RewriteBase /
+
+# Log de la requête
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule .* - [E=REQUEST_URI:%{REQUEST_URI}]
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule .* - [E=SCRIPT_FILENAME:%{SCRIPT_FILENAME}]
 
 # Redirection de /public/ vers la racine
 RewriteRule ^public/$ / [R=301,L]
