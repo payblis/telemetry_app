@@ -10,13 +10,14 @@ if (!isset($_SESSION['user_id'])) {
 
 // Ajout d'un pilote
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_rider'])) {
-    $name = $_POST['name'];
+    $last_name = $_POST['last_name'];
+    $first_name = $_POST['first_name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
 
     try {
-        $stmt = $db->prepare("INSERT INTO riders (name, email, phone) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $email, $phone]);
+        $stmt = $db->prepare("INSERT INTO riders (last_name, first_name, email, phone) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$last_name, $first_name, $email, $phone]);
         $success = "Pilote ajouté avec succès";
     } catch(PDOException $e) {
         $error = "Erreur lors de l'ajout du pilote : " . $e->getMessage();
@@ -38,7 +39,12 @@ $riders = $stmt->fetchAll();
 </head>
 <body>
     <div class="container">
-        <h1>Gestion des Pilotes</h1>
+        <header>
+            <h1>Gestion des Pilotes</h1>
+            <div class="user-info">
+                <a href="dashboard.php" class="btn">Retour au tableau de bord</a>
+            </div>
+        </header>
         
         <?php if (isset($error)): ?>
             <div class="error"><?php echo $error; ?></div>
@@ -52,16 +58,20 @@ $riders = $stmt->fetchAll();
             <h2>Ajouter un pilote</h2>
             <form method="POST" action="">
                 <div class="form-group">
-                    <label for="name">Nom</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="last_name">Nom *</label>
+                    <input type="text" id="last_name" name="last_name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="first_name">Prénom</label>
+                    <input type="text" id="first_name" name="first_name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
                     <input type="email" id="email" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Téléphone</label>
-                    <input type="text" id="phone" name="phone">
+                    <input type="tel" id="phone" name="phone">
                 </div>
                 <button type="submit" name="add_rider">Ajouter le pilote</button>
             </form>
@@ -73,18 +83,24 @@ $riders = $stmt->fetchAll();
                 <thead>
                     <tr>
                         <th>Nom</th>
+                        <th>Prénom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
                         <th>Date d'ajout</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($riders as $rider): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($rider['name']); ?></td>
+                            <td><?php echo htmlspecialchars($rider['last_name']); ?></td>
+                            <td><?php echo htmlspecialchars($rider['first_name']); ?></td>
                             <td><?php echo htmlspecialchars($rider['email']); ?></td>
                             <td><?php echo htmlspecialchars($rider['phone']); ?></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($rider['created_at'])); ?></td>
+                            <td>
+                                <a href="rider_profile.php?id=<?php echo $rider['id']; ?>" class="btn">Voir profil</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
