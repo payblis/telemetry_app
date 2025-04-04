@@ -1,0 +1,113 @@
+/* 
+ * Styles spécifiques pour l'authentification
+ * Télémétrie Moto SaaS
+ */
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 160px); /* Hauteur totale moins header et footer */
+    padding: 40px 20px;
+}
+
+.auth-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h2 {
+    color: #1a1a2e;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    color: #666;
+}
+
+.auth-form {
+    margin-bottom: 20px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Styles spécifiques pour les boutons d'authentification */
+.auth-form .btn-primary {
+    background-color: #0066cc;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+.auth-form .btn-primary:hover {
+    background-color: #004499;
+}
+
+/* Styles pour les champs de formulaire d'authentification */
+.auth-form .form-group input {
+    padding: 12px;
+    font-size: 1rem;
+}
+
+/* Animation pour les notifications */
+.notification {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles pour les liens dans les formulaires d'authentification */
+.auth-form a {
+    color: #0066cc;
+    transition: color 0.3s ease;
+}
+
+.auth-form a:hover {
+    color: #004499;
+    text-decoration: underline;
+}
+
+/* Styles pour les cases à cocher */
+.auth-form .checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 20px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .auth-form .btn-primary {
+        padding: 10px;
+    }
+}

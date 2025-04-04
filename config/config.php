@@ -1,54 +1,113 @@
 <?php
-// Fichier de configuration central pour l'application TeleMoto
-// Définir le chemin de base de l'application
+/**
+ * Configuration principale de l'application SaaS de Télémétrie Moto
+ */
 
-// Détection automatique du chemin de base
-$script_name = $_SERVER['SCRIPT_NAME'];
-$script_path = dirname($script_name);
-$base_path = rtrim(str_replace('\\', '/', $script_path), '/');
+// Mode de débogage (à désactiver en production)
+define('DEBUG_MODE', true);
 
-// Si l'application est à la racine, $base_path sera vide, donc on met '/'
-if (empty($base_path)) {
-    $base_path = '/';
-} else {
-    // Sinon, on s'assure qu'il y a un slash à la fin
-    $base_path = $base_path . '/';
-}
+// Configuration de la base de données
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'test2');
+define('DB_USER', 'test2');
+define('DB_PASS', '!31dNtc36');
+define('DB_CHARSET', 'utf8mb4');
 
-// URL de base pour les liens
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$base_path";
+// Configuration des chemins
+define('BASE_URL', 'https://test2.payblis.com');
+define('ASSETS_URL', BASE_URL . '/assets');
+define('UPLOADS_PATH', ROOT_PATH . '/public/uploads');
+define('VIEWS_PATH', ROOT_PATH . '/resources/views');
 
-// Chemins pour les ressources
-$css_path = $base_url . 'css/';
-$js_path = $base_url . 'js/';
-$images_path = $base_url . 'images/';
+// Configuration de l'application
+define('APP_NAME', 'Télémétrie Moto SaaS');
+define('APP_VERSION', '1.0.0');
+define('DEFAULT_LANGUAGE', 'fr');
+define('SESSION_LIFETIME', 86400); // 24 heures en secondes
 
-// Paramètres de connexion à la base de données
-$db_host = 'localhost';
-$db_name = 'test2';
-$db_user = 'test2';
-$db_pass = 'J31us30x%';
+// Configuration de sécurité
+define('HASH_SALT', 'telemetrie_moto_salt_' . APP_VERSION); // À changer en production
+define('TOKEN_LIFETIME', 3600); // 1 heure en secondes
 
-// Fonction pour obtenir la connexion à la base de données
-function getDBConnection() {
-    global $db_host, $db_name, $db_user, $db_pass;
+// Configuration API
+define('API_VERSION', 'v1');
+define('API_KEY_REQUIRED', true);
+
+// Configuration OpenAI (pour les recommandations IA)
+define('OPENAI_API_KEY', ''); // À remplir avec votre clé API
+define('OPENAI_MODEL', 'gpt-4');
+define('OPENAI_TEMPERATURE', 0.7);
+define('OPENAI_MAX_TOKENS', 500);
+
+// Configuration des limites
+define('MAX_UPLOAD_SIZE', 100 * 1024 * 1024); // 100 MB
+define('MAX_VIDEO_SIZE', 500 * 1024 * 1024); // 500 MB
+define('MAX_API_CALLS_PER_DAY', 100);
+
+// Configuration des formats acceptés
+define('ACCEPTED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
+define('ACCEPTED_VIDEO_TYPES', ['video/mp4', 'video/quicktime', 'video/x-msvideo']);
+define('ACCEPTED_DATA_TYPES', ['application/json']);
+
+// Fonctions utilitaires de configuration
+function config($key, $default = null) {
+    $config = [
+        'app' => [
+            'name' => APP_NAME,
+            'version' => APP_VERSION,
+            'debug' => DEBUG_MODE,
+            'default_language' => DEFAULT_LANGUAGE
+        ],
+        'db' => [
+            'host' => DB_HOST,
+            'name' => DB_NAME,
+            'user' => DB_USER,
+            'pass' => DB_PASS,
+            'charset' => DB_CHARSET
+        ],
+        'paths' => [
+            'base' => BASE_URL,
+            'assets' => ASSETS_URL,
+            'uploads' => UPLOADS_PATH,
+            'views' => VIEWS_PATH
+        ],
+        'security' => [
+            'hash_salt' => HASH_SALT,
+            'token_lifetime' => TOKEN_LIFETIME,
+            'session_lifetime' => SESSION_LIFETIME
+        ],
+        'api' => [
+            'version' => API_VERSION,
+            'key_required' => API_KEY_REQUIRED,
+            'max_calls_per_day' => MAX_API_CALLS_PER_DAY
+        ],
+        'openai' => [
+            'api_key' => OPENAI_API_KEY,
+            'model' => OPENAI_MODEL,
+            'temperature' => OPENAI_TEMPERATURE,
+            'max_tokens' => OPENAI_MAX_TOKENS
+        ],
+        'limits' => [
+            'max_upload_size' => MAX_UPLOAD_SIZE,
+            'max_video_size' => MAX_VIDEO_SIZE
+        ],
+        'formats' => [
+            'accepted_image_types' => ACCEPTED_IMAGE_TYPES,
+            'accepted_video_types' => ACCEPTED_VIDEO_TYPES,
+            'accepted_data_types' => ACCEPTED_DATA_TYPES
+        ]
+    ];
     
-    // Créer la connexion
-    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+    $keys = explode('.', $key);
+    $value = $config;
     
-    // Vérifier la connexion
-    if ($conn->connect_error) {
-        die("Erreur de connexion à la base de données: " . $conn->connect_error);
+    foreach ($keys as $k) {
+        if (isset($value[$k])) {
+            $value = $value[$k];
+        } else {
+            return $default;
+        }
     }
     
-    // Définir l'encodage des caractères
-    $conn->set_charset("utf8");
-    
-    return $conn;
-}
-
-// Fonction pour générer des URLs
-function url($path = '') {
-    global $base_url;
-    return $base_url . ltrim($path, '/');
+    return $value;
 }
