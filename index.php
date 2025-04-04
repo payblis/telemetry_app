@@ -13,7 +13,11 @@ ini_set('display_errors', 1);
 // Log de la requête
 error_log("ROOT INDEX.PHP - Requête reçue: " . $_SERVER['REQUEST_URI']);
 
-// Redirection vers le dossier public
-error_log("ROOT INDEX.PHP - Redirection vers public/");
-header('Location: public/');
-exit;
+// Vérifier si nous ne sommes pas déjà dans le dossier public
+if (strpos($_SERVER['REQUEST_URI'], '/public/') === false) {
+    error_log("ROOT INDEX.PHP - Redirection vers public/");
+    header('Location: /public/');
+    exit;
+} else {
+    error_log("ROOT INDEX.PHP - Déjà dans public/, pas de redirection nécessaire");
+}
