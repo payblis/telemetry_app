@@ -1,223 +1,198 @@
 <?php
-require_once '../includes/config.php';
-require_once '../includes/auth.php';
-
-checkAuth();
-
-$message = '';
+$page_title = 'Ajouter un Pilote';
+require_once '../includes/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
-    $prenom = filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_STRING);
-    $pseudo = filter_input(INPUT_POST, 'pseudo', FILTER_SANITIZE_STRING);
-    $taille = filter_input(INPUT_POST, 'taille_cm', FILTER_VALIDATE_INT);
-    $poids = filter_input(INPUT_POST, 'poids_kg', FILTER_VALIDATE_INT);
-    $niveau = filter_input(INPUT_POST, 'niveau', FILTER_SANITIZE_STRING);
-    $experience = filter_input(INPUT_POST, 'experience_annees', FILTER_VALIDATE_INT);
-    $style = filter_input(INPUT_POST, 'style_pilotage', FILTER_SANITIZE_STRING);
-    $sensibilite = filter_input(INPUT_POST, 'sensibilite_grip', FILTER_SANITIZE_STRING);
-    $licence = isset($_POST['licence']) ? 1 : 0;
-    $numero_licence = filter_input(INPUT_POST, 'numero_licence', FILTER_SANITIZE_STRING);
-    $notes = filter_input(INPUT_POST, 'notes', FILTER_SANITIZE_STRING);
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO pilotes (
+                user_id, nom, prenom, pseudo, taille, poids, 
+                experience_annees, niveau, style_pilotage, 
+                licence, licence_numero, licence_date_expiration, 
+                commentaires
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        
+        $stmt->execute([
+            $_SESSION['user_id'],
+            $_POST['nom'],
+            $_POST['prenom'],
+            $_POST['pseudo'],
+            $_POST['taille'],
+            $_POST['poids'],
+            $_POST['experience_annees'],
+            $_POST['niveau'],
+            $_POST['style_pilotage'],
+            isset($_POST['licence']) ? 1 : 0,
+            $_POST['licence_numero'] ?? null,
+            $_POST['licence_date_expiration'] ?? null,
+            $_POST['commentaires'] ?? null
+        ]);
 
-    if (!$nom || !$prenom) {
-        $message = "Le nom et le prénom sont obligatoires";
-    } else {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO pilotes (user_id, nom, prenom, pseudo, taille_cm, poids_kg, niveau, experience_annees, style_pilotage, sensibilite_grip, licence, numero_licence, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            if ($stmt->execute([
-                $_SESSION['user_id'],
-                $nom,
-                $prenom,
-                $pseudo,
-                $taille,
-                $poids,
-                $niveau,
-                $experience,
-                $style,
-                $sensibilite,
-                $licence,
-                $numero_licence,
-                $notes
-            ])) {
-                header("Location: index.php");
-                exit;
-            }
-        } catch (PDOException $e) {
-            $message = "Erreur lors de l'ajout du pilote : " . $e->getMessage();
-        }
+        header('Location: index.php');
+        exit;
+    } catch (PDOException $e) {
+        $error = "Erreur lors de l'ajout du pilote : " . $e->getMessage();
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Pilote - Télémétrie Moto</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Ajouter un Pilote</h1>
-        
-        <?php if ($message): ?>
-            <div class="alert"><?php echo htmlspecialchars($message); ?></div>
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Ajouter un Pilote</h5>
+        <a href="index.php" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+    <div class="card-body">
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="" class="form-pilote">
-            <div class="form-group">
-                <label for="nom">Nom* :</label>
-                <input type="text" id="nom" name="nom" required value="<?php echo isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : ''; ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="prenom">Prénom* :</label>
-                <input type="text" id="prenom" name="prenom" required value="<?php echo isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : ''; ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="pseudo">Pseudo :</label>
-                <input type="text" id="pseudo" name="pseudo" value="<?php echo isset($_POST['pseudo']) ? htmlspecialchars($_POST['pseudo']) : ''; ?>">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="taille_cm">Taille (cm) :</label>
-                    <input type="number" id="taille_cm" name="taille_cm" value="<?php echo isset($_POST['taille_cm']) ? htmlspecialchars($_POST['taille_cm']) : ''; ?>">
+        <form method="POST" class="needs-validation" novalidate>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer le nom du pilote.
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="poids_kg">Poids (kg) :</label>
-                    <input type="number" id="poids_kg" name="poids_kg" value="<?php echo isset($_POST['poids_kg']) ? htmlspecialchars($_POST['poids_kg']) : ''; ?>">
+                <div class="col-md-6 mb-3">
+                    <label for="prenom" class="form-label">Prénom</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer le prénom du pilote.
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="niveau">Niveau :</label>
-                <select id="niveau" name="niveau">
-                    <option value="">Sélectionnez un niveau</option>
-                    <option value="Débutant">Débutant</option>
-                    <option value="Intermédiaire">Intermédiaire</option>
-                    <option value="Avancé">Avancé</option>
-                    <option value="Expert">Expert</option>
-                    <option value="Professionnel">Professionnel</option>
-                </select>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="pseudo" class="form-label">Pseudo</label>
+                    <input type="text" class="form-control" id="pseudo" name="pseudo" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer le pseudo du pilote.
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="niveau" class="form-label">Niveau</label>
+                    <select class="form-select" id="niveau" name="niveau" required>
+                        <option value="">Sélectionner un niveau</option>
+                        <option value="Débutant">Débutant</option>
+                        <option value="Intermédiaire">Intermédiaire</option>
+                        <option value="Avancé">Avancé</option>
+                        <option value="Expert">Expert</option>
+                        <option value="Professionnel">Professionnel</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Veuillez sélectionner le niveau du pilote.
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="experience_annees">Années d'expérience :</label>
-                <input type="number" id="experience_annees" name="experience_annees" value="<?php echo isset($_POST['experience_annees']) ? htmlspecialchars($_POST['experience_annees']) : ''; ?>">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="taille" class="form-label">Taille (cm)</label>
+                    <input type="number" class="form-control" id="taille" name="taille" min="100" max="250" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer une taille valide (entre 100 et 250 cm).
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="poids" class="form-label">Poids (kg)</label>
+                    <input type="number" class="form-control" id="poids" name="poids" min="30" max="200" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer un poids valide (entre 30 et 200 kg).
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="style_pilotage">Style de pilotage :</label>
-                <input type="text" id="style_pilotage" name="style_pilotage" value="<?php echo isset($_POST['style_pilotage']) ? htmlspecialchars($_POST['style_pilotage']) : ''; ?>">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="experience_annees" class="form-label">Années d'expérience</label>
+                    <input type="number" class="form-control" id="experience_annees" name="experience_annees" min="0" max="50" required>
+                    <div class="invalid-feedback">
+                        Veuillez entrer un nombre d'années valide.
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="style_pilotage" class="form-label">Style de pilotage</label>
+                    <select class="form-select" id="style_pilotage" name="style_pilotage" required>
+                        <option value="">Sélectionner un style</option>
+                        <option value="Smooth">Smooth</option>
+                        <option value="Aggressif">Aggressif</option>
+                        <option value="Mixte">Mixte</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Veuillez sélectionner le style de pilotage.
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="sensibilite_grip">Sensibilité au grip :</label>
-                <select id="sensibilite_grip" name="sensibilite_grip">
-                    <option value="">Sélectionnez une sensibilité</option>
-                    <option value="Faible">Faible</option>
-                    <option value="Moyenne">Moyenne</option>
-                    <option value="Élevée">Élevée</option>
-                </select>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="licence" name="licence">
+                    <label class="form-check-label" for="licence">
+                        Possède une licence
+                    </label>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="licence" <?php echo isset($_POST['licence']) ? 'checked' : ''; ?>>
-                    Possède une licence
-                </label>
+            <div class="row licence-fields" style="display: none;">
+                <div class="col-md-6 mb-3">
+                    <label for="licence_numero" class="form-label">Numéro de licence</label>
+                    <input type="text" class="form-control" id="licence_numero" name="licence_numero">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="licence_date_expiration" class="form-label">Date d'expiration</label>
+                    <input type="date" class="form-control" id="licence_date_expiration" name="licence_date_expiration">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="numero_licence">Numéro de licence :</label>
-                <input type="text" id="numero_licence" name="numero_licence" value="<?php echo isset($_POST['numero_licence']) ? htmlspecialchars($_POST['numero_licence']) : ''; ?>">
+            <div class="mb-3">
+                <label for="commentaires" class="form-label">Commentaires</label>
+                <textarea class="form-control" id="commentaires" name="commentaires" rows="3"></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="notes">Notes :</label>
-                <textarea id="notes" name="notes" rows="4"><?php echo isset($_POST['notes']) ? htmlspecialchars($_POST['notes']) : ''; ?></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit">Ajouter le pilote</button>
-                <a href="index.php" class="btn-secondary">Annuler</a>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Enregistrer
+                </button>
             </div>
         </form>
     </div>
+</div>
 
-    <style>
-        .form-pilote {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+<script>
+    // Validation des formulaires Bootstrap
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
 
-        .form-row {
-            display: flex;
-            gap: 1rem;
-        }
+    // Gestion de l'affichage des champs de licence
+    document.getElementById('licence').addEventListener('change', function() {
+        const licenceFields = document.querySelector('.licence-fields');
+        licenceFields.style.display = this.checked ? 'block' : 'none';
+    });
+</script>
 
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            resize: vertical;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            width: auto;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .form-actions button,
-        .form-actions .btn-secondary {
-            flex: 1;
-            text-align: center;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            text-decoration: none;
-        }
-    </style>
-</body>
-</html> 
+<?php require_once '../includes/footer.php'; ?> 

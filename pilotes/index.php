@@ -1,151 +1,195 @@
 <?php
-require_once '../includes/config.php';
-require_once '../includes/auth.php';
-
-checkAuth();
+$page_title = 'Gestion des Pilotes';
+require_once '../includes/header.php';
 
 // Récupération des pilotes de l'utilisateur connecté
-$stmt = $pdo->prepare("SELECT * FROM pilotes WHERE user_id = ? ORDER BY nom, prenom");
-$stmt->execute([$_SESSION['user_id']]);
-$pilotes = $stmt->fetchAll();
+try {
+    $stmt = $pdo->prepare("SELECT * FROM pilotes WHERE user_id = ? ORDER BY nom, prenom");
+    $stmt->execute([$_SESSION['user_id']]);
+    $pilotes = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $error = "Erreur lors de la récupération des pilotes : " . $e->getMessage();
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Pilotes - Télémétrie Moto</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Gestion des Pilotes</h1>
-        
-        <div class="actions">
-            <a href="ajouter.php" class="btn-primary">Ajouter un pilote</a>
-        </div>
-
-        <?php if (count($pilotes) > 0): ?>
-            <div class="pilotes-list">
-                <?php foreach ($pilotes as $pilote): ?>
-                    <div class="pilote-card">
-                        <h3><?php echo htmlspecialchars($pilote['nom'] . ' ' . $pilote['prenom']); ?></h3>
-                        <p class="pseudo"><?php echo htmlspecialchars($pilote['pseudo']); ?></p>
-                        <div class="details">
-                            <p><strong>Niveau :</strong> <?php echo htmlspecialchars($pilote['niveau']); ?></p>
-                            <p><strong>Expérience :</strong> <?php echo htmlspecialchars($pilote['experience_annees']); ?> années</p>
-                            <p><strong>Style de pilotage :</strong> <?php echo htmlspecialchars($pilote['style_pilotage']); ?></p>
-                        </div>
-                        <div class="actions">
-                            <a href="modifier.php?id=<?php echo $pilote['id']; ?>" class="btn-secondary">Modifier</a>
-                            <a href="supprimer.php?id=<?php echo $pilote['id']; ?>" class="btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?');">Supprimer</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Liste des Pilotes</h5>
+        <a href="ajouter.php" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Ajouter un pilote
+        </a>
+    </div>
+    <div class="card-body">
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php elseif (empty($pilotes)): ?>
+            <div class="text-center py-5">
+                <i class="fas fa-user fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Aucun pilote enregistré</h4>
+                <p class="text-muted">Commencez par ajouter votre premier pilote</p>
+                <a href="ajouter.php" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Ajouter un pilote
+                </a>
             </div>
         <?php else: ?>
-            <p class="no-data">Aucun pilote enregistré. Commencez par en ajouter un !</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Pseudo</th>
+                            <th>Niveau</th>
+                            <th>Expérience</th>
+                            <th>Style</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($pilotes as $pilote): ?>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-primary-light">
+                                            <span class="avatar-initials">
+                                                <?php echo strtoupper(substr($pilote['prenom'], 0, 1) . substr($pilote['nom'], 0, 1)); ?>
+                                            </span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="font-weight-bold"><?php echo htmlspecialchars($pilote['nom'] . ' ' . $pilote['prenom']); ?></div>
+                                            <?php if ($pilote['licence']): ?>
+                                                <small class="text-success">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    Licence
+                                                </small>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><?php echo htmlspecialchars($pilote['pseudo']); ?></td>
+                                <td>
+                                    <span class="badge badge-pill badge-<?php 
+                                        echo match($pilote['niveau']) {
+                                            'Professionnel' => 'danger',
+                                            'Expert' => 'warning',
+                                            'Avancé' => 'info',
+                                            'Intermédiaire' => 'success',
+                                            default => 'secondary'
+                                        };
+                                    ?>">
+                                        <?php echo htmlspecialchars($pilote['niveau']); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo htmlspecialchars($pilote['experience_annees']); ?> ans</td>
+                                <td><?php echo htmlspecialchars($pilote['style_pilotage']); ?></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="modifier.php?id=<?php echo $pilote['id']; ?>" class="btn btn-sm btn-info" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="supprimer.php?id=<?php echo $pilote['id']; ?>" class="btn btn-sm btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce pilote ?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php endif; ?>
-
-        <p class="back-link">
-            <a href="../index.php">Retour à l'accueil</a>
-        </p>
     </div>
+</div>
 
-    <style>
-        .actions {
-            margin: 2rem 0;
-            text-align: right;
-        }
+<style>
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-        }
+    .avatar-initials {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 1rem;
+    }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            text-decoration: none;
-        }
+    .badge {
+        padding: .5em .75em;
+        font-size: .75rem;
+        font-weight: 600;
+    }
 
-        .pilotes-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+    .badge-pill {
+        border-radius: 50rem;
+    }
 
-        .pilote-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    .badge-danger {
+        background-color: var(--danger);
+        color: white;
+    }
 
-        .pilote-card h3 {
-            margin: 0 0 0.5rem 0;
-            color: #333;
-        }
+    .badge-warning {
+        background-color: var(--warning);
+        color: white;
+    }
 
-        .pilote-card .pseudo {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
+    .badge-info {
+        background-color: var(--info);
+        color: white;
+    }
 
-        .pilote-card .details {
-            margin-bottom: 1.5rem;
-        }
+    .badge-success {
+        background-color: var(--success);
+        color: white;
+    }
 
-        .pilote-card .details p {
-            margin: 0.5rem 0;
-            text-align: left;
-        }
+    .badge-secondary {
+        background-color: var(--secondary);
+        color: white;
+    }
 
-        .pilote-card .actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
+    .btn-group {
+        display: flex;
+        gap: .25rem;
+    }
 
-        .btn-secondary, .btn-danger {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            flex: 1;
-            text-align: center;
-        }
+    .text-center {
+        text-align: center;
+    }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
+    .py-5 {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
 
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
+    .ml-3 {
+        margin-left: 1rem;
+    }
 
-        .btn-secondary:hover, .btn-danger:hover {
-            opacity: 0.9;
-            text-decoration: none;
-        }
+    .font-weight-bold {
+        font-weight: 600;
+    }
 
-        .no-data {
-            text-align: center;
-            color: #666;
-            margin: 2rem 0;
-        }
+    .text-success {
+        color: var(--success);
+    }
 
-        .back-link {
-            margin-top: 2rem;
-            text-align: center;
-        }
-    </style>
-</body>
-</html> 
+    .text-muted {
+        color: #6c757d;
+    }
+
+    .fa-3x {
+        font-size: 3rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+</style>
+
+<?php require_once '../includes/footer.php'; ?> 
